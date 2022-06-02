@@ -35,9 +35,10 @@
 (setenv "LC_MESSAGES" "C")
 
 ;; Add repos
-(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                         ("melpa" . "https://melpa.org/packages/")))
+(setq package-archives
+      '(("gnu" . "https://elpa.gnu.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+        ("melpa" . "https://melpa.org/packages/")))
 (require 'package)
 (package-initialize)
 
@@ -52,7 +53,8 @@
   (setq projectile-enable-caching t)
   (setq projectile-indexing-method 'native)
   (setq projectile-auto-discover nil)
-  (setq projectile-project-search-path '(("~/.emacs.d" . 0), ("~/git" . 0)))
+  (setq projectile-project-search-path
+        '(("~/.emacs.d" . 0) ("~/git" . 0)))
   ;; Old search method
   ;; (setq projectile-completion-system 'ido)
   :bind-keymap
