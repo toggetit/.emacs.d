@@ -51,9 +51,8 @@
   :config
   (projectile-mode)
   (setq projectile-enable-caching t)
-  (setq projectile-auto-discover nil)
   (setq projectile-project-search-path
-        '(("~/.emacs.d" . 0) ("~/git" . 0)))
+        '(("~/.emacs.d" . 0) ("~/git" . 1)))
   ;; Old search method
   ;; (setq projectile-completion-system 'ido)
   :bind-keymap
