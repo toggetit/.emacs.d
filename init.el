@@ -51,7 +51,6 @@
   :config
   (projectile-mode)
   (setq projectile-enable-caching t)
-  (setq projectile-indexing-method 'native)
   (setq projectile-auto-discover nil)
   (setq projectile-project-search-path
         '(("~/.emacs.d" . 0) ("~/git" . 0)))
