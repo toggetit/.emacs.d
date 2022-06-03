@@ -16,7 +16,7 @@
  '(tab-always-indent 'complete)
  '(tool-bar-mode nil)
  '(use-short-answers t)
- '(y-or-n-p-use-read-key t)
+ '(y-or-n-p-use-read-key t))
 
 (custom-set-faces
  '(default ((t (:family "Droid Sans Mono" :foundry "1ASC" :slant normal :weight normal :height 140 :width normal)))))
