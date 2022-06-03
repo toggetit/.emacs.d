@@ -8,13 +8,16 @@
  '(history-delete-duplicates t)
  '(indent-tabs-mode nil)
  '(kill-do-not-save-duplicates t)
+ '(kill-read-only-ok t)
  '(make-backup-files nil)
- '(ring-bell-function #'ignore))
+ '(ring-bell-function #'ignore)
  '(scroll-preserve-screen-position t)
  '(standard-indent 2)
  '(tab-always-indent 'complete)
  '(tool-bar-mode nil)
  '(use-short-answers t)
+ '(y-or-n-p-use-read-key t)
+
 (custom-set-faces
  '(default ((t (:family "Droid Sans Mono" :foundry "1ASC" :slant normal :weight normal :height 140 :width normal)))))
 
