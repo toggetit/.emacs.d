@@ -50,88 +50,76 @@
   (package-install 'use-package))
 
 (use-package projectile
-  :ensure t
+  :custom
+  (projectile-enable-caching t)
+  (projectile-project-search-path
+   '(("~/.emacs.d" . 0) ("~/git" . 1)))
+  ;; Old search method
+  ;; (projectile-completion-system 'ido)
   :config
   (projectile-mode)
-  (setq projectile-enable-caching t)
-  (setq projectile-project-search-path
-        '(("~/.emacs.d" . 0) ("~/git" . 1)))
-  ;; Old search method
-  ;; (setq projectile-completion-system 'ido)
   :bind-keymap
   ("C-c p" . projectile-command-map))
 
 (use-package helm-projectile
-  :ensure t
-  :config
-  (setq projectile-completion-system 'helm))
+  :custom
+  (projectile-completion-system 'helm))
 
 (use-package ergoemacs-status
-  :ensure t
   :config
   (ergoemacs-status-mode))
 
-(use-package magit
-  :ensure t)
+(use-package magit)
 
 (use-package flycheck
-  :ensure t
   :hook
   (c++-mode . flycheck-mode))
 
 (use-package flycheck-yamllint
-  :ensure t
   :hook
   (flycheck-mode . flycheck-yamllint-setup))
 
 (use-package company
-  :ensure t
   :hook
   (c++-mode . company-mode))
 
 (use-package company-terraform
-  :ensure t
   :hook
   (terraform-mode . company-terraform-init))
 
 (use-package python-mode
-  :ensure t
   :hook
   (python-mode . flycheck-mode)
   (python-mode . company-mode)
-  (python-mode . (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
-  :config
-  (setq flycheck-puppet-lint-disabled-checks
-	'("80chars"
-	  "autoloader_layout"
-	  "documentation"
-	  "inherits_across_namespaces"
-	  "selector_inside_resource"
-	  "variable_scope")))
+  (python-mode . (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace))))
 
 (use-package puppet-mode
-  :ensure t
+  :custom
+  (flycheck-puppet-lint-disabled-checks
+   '("80chars"
+     "autoloader_layout"
+     "documentation"
+     "inherits_across_namespaces"
+     "selector_inside_resource"
+     "variable_scope"))
   :hook
   (puppet-mode . flycheck-mode)
   (puppet-mode . company-mode)
   (puppet-mode . (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace))))
 
 (use-package yaml-mode
-  :ensure t
+  :custom
+  (flycheck-disabled-checkers '(yaml-ruby))
   :hook
   (yaml-mode . flycheck-mode)
-  (yaml-mode . company-mode)
-  :config
-  (setq flycheck-disabled-checkers '(yaml-ruby)))
+  (yaml-mode . company-mode))
 
 (use-package terraform-mode
-  :ensure t
   :hook
   (terraform-mode . flycheck-mode)
   (terraform-mode . company-mode)
   (terraform-mode . terraform-format-on-save-mode))
 
-(use-package ansible
-  :ensure t)
+(use-package ansible)
 
 (put 'downcase-region 'disabled nil)
