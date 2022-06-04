@@ -1,3 +1,5 @@
+(setq custom-file (make-temp-file "emacs-custom-"))
+
 (custom-set-variables
  '(column-number-indicator-zero-based nil)
  '(column-number-mode t)
@@ -19,7 +21,7 @@
  '(y-or-n-p-use-read-key t))
 
 (custom-set-faces
- '(default ((t (:family "Droid Sans Mono" :foundry "1ASC" :slant normal :weight normal :height 140 :width normal)))))
+ '(default ((t (:family "Droid Sans Mono" :height 140)))))
 
 ;; PuTTY fix. Ugly. Bad. But it works. (Good)
 (define-key global-map "\M-[1~" 'beginning-of-line)
