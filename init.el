@@ -49,6 +49,9 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(require 'use-package-ensure)
+(setq use-package-always-ensure t)
+
 (use-package projectile
   :custom
   (projectile-enable-caching t)
