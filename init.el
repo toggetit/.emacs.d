@@ -70,9 +70,13 @@
   :custom
   (projectile-completion-system 'helm))
 
-(use-package ergoemacs-status
+(use-package doom-modeline
+  :ensure t
   :config
-  (ergoemacs-status-mode))
+  (doom-modeline-mode 1))
+
+(use-package all-the-icons
+  :if (display-graphic-p))
 
 (use-package magit)
 
