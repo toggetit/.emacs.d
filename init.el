@@ -66,19 +66,47 @@
   :bind-keymap
   ("C-c p" . projectile-command-map))
 
+(use-package helm
+  :bind
+  ([remap find-file] . helm-find-files)
+  (:map helm-map
+        ([tab] . helm-next-line)
+        ([backtab] . helm-previous-line)))
+
 (use-package helm-projectile
   :custom
   (projectile-completion-system 'helm))
+
+(use-package swiper-helm
+  :bind
+  ([remap fill-file] . swiper-isearch))
+
+(use-package helpful
+  :bind
+  ([remap describe-function] . helpful-callable)
+  ([remap describe-variable] . helpful-variable)
+  ([remap describe-key] . helpful-key))
+
+(use-package which-key
+  :config
+  (which-key-mode))
+
+(use-package amx
+  :config
+  (amx-mode))
 
 (use-package doom-modeline
   :config
   (doom-modeline-mode t))
 
+(use-package doom-themes
+  :config
+  (load-theme 'doom-dracula t))
+
 (use-package all-the-icons
   :if (display-graphic-p))
 
-(use-package magit)
-
+;; Flycheck part
 (use-package flycheck
   :hook
   (c++-mode . flycheck-mode))
