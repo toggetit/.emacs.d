@@ -137,6 +137,7 @@
   :custom
   (flycheck-puppet-lint-disabled-checks
    '("80chars"
+     "140chars"
      "autoloader_layout"
      "documentation"
      "inherits_across_namespaces"
