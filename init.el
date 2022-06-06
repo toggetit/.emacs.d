@@ -71,9 +71,8 @@
   (projectile-completion-system 'helm))
 
 (use-package doom-modeline
-  :ensure t
   :config
-  (doom-modeline-mode 1))
+  (doom-modeline-mode t))
 
 (use-package all-the-icons
   :if (display-graphic-p))
