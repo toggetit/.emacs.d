@@ -81,7 +81,7 @@
 
 (use-package swiper-helm
   :bind
-  ([remap fill-file] . swiper-isearch))
+  ([remap isearch-forward] . swiper-isearch))
 
 (use-package helpful
   :bind
@@ -94,6 +94,8 @@
   (which-key-mode))
 
 (use-package amx
+  :custom
+  (amx-backend 'ivy)
   :config
   (amx-mode))
 
