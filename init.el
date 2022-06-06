@@ -79,9 +79,14 @@
   :custom
   (projectile-completion-system 'helm))
 
-(use-package swiper-helm
+(use-package swiper
   :bind
-  ([remap isearch-forward] . swiper-isearch))
+  ([remap isearch-forward] . swiper))
+
+;; Maybe sometime...
+;; (use-package swiper-helm
+;;   :bind
+;;   ([remap isearch-forward] . swiper-helm))
 
 (use-package helpful
   :bind
