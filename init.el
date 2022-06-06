@@ -70,6 +70,7 @@
 
 (use-package helm
   :bind
+  ([remap execute-extended-command] . helm-M-x)
   ([remap find-file] . helm-find-files)
   (:map helm-map
         ([tab] . helm-next-line)
@@ -97,12 +98,6 @@
 (use-package which-key
   :config
   (which-key-mode))
-
-(use-package amx
-  :custom
-  (amx-backend 'ivy)
-  :config
-  (amx-mode))
 
 (use-package doom-modeline
   :config
