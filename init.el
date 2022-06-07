@@ -4,7 +4,6 @@
  '(column-number-indicator-zero-based nil)
  '(column-number-mode t)
  '(current-language-environment "UTF-8")
- '(custom-enabled-themes '(wombat))
  '(electric-pair-mode t)
  '(global-display-line-numbers-mode t)
  '(history-delete-duplicates t)
