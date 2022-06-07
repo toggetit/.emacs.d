@@ -75,7 +75,9 @@
         ([tab] . helm-next-line)
         ([backtab] . helm-previous-line))
   :custom
-  (helm-split-window-inside-p t))
+  (helm-split-window-inside-p t)
+  :config
+  (helm-mode))
 
 (use-package helm-projectile
   :custom
