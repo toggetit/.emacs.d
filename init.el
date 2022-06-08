@@ -72,7 +72,7 @@
   ([remap execute-extended-command] . helm-M-x)
   ([remap find-file] . helm-find-files)
   (:map helm-map
-        ([tab] . helm-next-line)
+        ([?\t] . helm-next-line)
         ([backtab] . helm-previous-line))
   :custom
   (helm-split-window-inside-p t))
