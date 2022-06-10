@@ -106,6 +106,10 @@
 (use-package all-the-icons
   :if (display-graphic-p))
 
+(use-package rainbow-delimiters
+  :hook
+  (prog-mode . rainbow-delimiters-mode))
+
 ;; Flycheck part
 (use-package flycheck
   :hook
