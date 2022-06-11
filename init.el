@@ -111,27 +111,35 @@
   :hook
   (prog-mode . rainbow-delimiters-mode))
 
+(use-package yasnippet
+  :hook
+  (prog-mode . yas-minor-mode))
+
+(use-package yasnippet-snippets)
+
 ;; Flycheck part
 (use-package flycheck
   :hook
-  (c++-mode . flycheck-mode))
+  (prog-mode . flycheck-mode))
 
 (use-package flycheck-yamllint
   :hook
   (flycheck-mode . flycheck-yamllint-setup))
+;; End flycheck part
 
+;; Company part
 (use-package company
   :hook
-  (c++-mode . company-mode))
+  (prog-mode . company-mode))
 
 (use-package company-terraform
   :hook
   (terraform-mode . company-terraform-init))
+;; End company part
 
+;; Variuos prog modes
 (use-package python-mode
   :hook
-  (python-mode . flycheck-mode)
-  (python-mode . company-mode)
   (python-mode . (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace))))
 
 (use-package puppet-mode
@@ -145,21 +153,14 @@
      "selector_inside_resource"
      "variable_scope"))
   :hook
-  (puppet-mode . flycheck-mode)
-  (puppet-mode . company-mode)
   (puppet-mode . (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace))))
 
 (use-package yaml-mode
   :custom
-  (flycheck-disabled-checkers '(yaml-ruby))
-  :hook
-  (yaml-mode . flycheck-mode)
-  (yaml-mode . company-mode))
+  (flycheck-disabled-checkers '(yaml-ruby)))
 
 (use-package terraform-mode
   :hook
-  (terraform-mode . flycheck-mode)
-  (terraform-mode . company-mode)
   (terraform-mode . terraform-format-on-save-mode))
 
 (use-package ansible)
