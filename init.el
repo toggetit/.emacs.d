@@ -55,6 +55,8 @@
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
 
+(use-package magit)
+
 (use-package projectile
   :custom
   (projectile-enable-caching t)
