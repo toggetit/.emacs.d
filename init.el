@@ -165,4 +165,8 @@
   :hook
   (terraform-mode . terraform-format-on-save-mode))
 
+(use-package dockerfile-mode)
+
+(use-package docker-compose-mode)
+
 (use-package ansible)
