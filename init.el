@@ -74,6 +74,7 @@
   ([remap execute-extended-command] . helm-M-x)
   ([remap find-file] . helm-find-files)
   ([remap isearch-backward] . previous-complete-history-element)
+  ([remap switch-to-buffer] . helm-buffers-list)
   (:map helm-map
         ([?\t] . helm-next-line)
         ([backtab] . helm-previous-line))
