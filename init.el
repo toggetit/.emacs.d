@@ -162,6 +162,8 @@
   :custom
   (flycheck-disabled-checkers '(yaml-ruby)))
 
+(use-package hcl-mode)
+
 (use-package terraform-mode
   :hook
   (terraform-mode . terraform-format-on-save-mode))
