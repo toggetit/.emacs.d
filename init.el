@@ -114,6 +114,11 @@
   :hook
   (prog-mode . rainbow-delimiters-mode))
 
+(use-package markdown-mode
+  :ensure t
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown"))
+
 (use-package yasnippet
   :hook
   (prog-mode . yas-minor-mode))
