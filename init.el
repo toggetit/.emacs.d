@@ -174,4 +174,17 @@
   :init
   (add-to-list 'auto-mode-alist '("compose[^/]*\\.ya?ml$" . docker-compose-mode)))
 
+(use-package k8s-mode
+  :ensure t
+  :config
+  (setq k8s-search-documentation-browser-function 'browse-url-firefox)
+  :hook (k8s-mode . yas-minor-mode))
+
+(use-package kubernetes
+  :ensure t
+  :commands (kubernetes-overview)
+  :config
+  (setq kubernetes-poll-frequency 3600
+        kubernetes-redraw-frequency 3600))
+
 (use-package ansible)
