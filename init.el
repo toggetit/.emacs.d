@@ -189,10 +189,7 @@
 
 (use-package k8s-mode
   :ensure t
-  :config
-  (setq k8s-search-documentation-browser-function 'browse-url-firefox)
   :hook
-  (k8s-mode . (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
   (k8s-mode . yas-minor-mode))
 
 (use-package kubernetes
@@ -201,7 +198,3 @@
   :config
   (setq kubernetes-poll-frequency 3600
         kubernetes-redraw-frequency 3600))
-
-(use-package ansible
-  :hook
-  (python-mode . (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace))))
