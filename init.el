@@ -69,6 +69,12 @@
   :bind-keymap
   ("C-c p" . projectile-command-map))
 
+(use-package yasnippet
+  :hook
+  (prog-mode . yas-minor-mode))
+
+(use-package yasnippet-snippets)
+
 (use-package helm
   :bind
   ([remap execute-extended-command] . helm-M-x)
@@ -88,6 +94,12 @@
 (use-package swiper-helm
   :bind
   ([remap isearch-forward] . swiper-helm))
+
+(use-package helm-c-yasnippet
+  :custom
+  (helm-yas-space-match-any-greedy t)
+  :bind
+  ("C-c y" . helm-yas-complete))
 
 (use-package helpful
   :bind
@@ -118,12 +130,6 @@
   :ensure t
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown"))
-
-(use-package yasnippet
-  :hook
-  (prog-mode . yas-minor-mode))
-
-(use-package yasnippet-snippets)
 
 ;; Flycheck part
 (use-package flycheck
@@ -165,7 +171,9 @@
 
 (use-package yaml-mode
   :custom
-  (flycheck-disabled-checkers '(yaml-ruby)))
+  (flycheck-disabled-checkers '(yaml-ruby))
+  :hook
+  (yaml-mode . (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace))))
 
 (use-package hcl-mode)
 
@@ -183,7 +191,9 @@
   :ensure t
   :config
   (setq k8s-search-documentation-browser-function 'browse-url-firefox)
-  :hook (k8s-mode . yas-minor-mode))
+  :hook
+  (k8s-mode . (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+  (k8s-mode . yas-minor-mode))
 
 (use-package kubernetes
   :ensure t
@@ -192,4 +202,6 @@
   (setq kubernetes-poll-frequency 3600
         kubernetes-redraw-frequency 3600))
 
-(use-package ansible)
+(use-package ansible
+  :hook
+  (python-mode . (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace))))
