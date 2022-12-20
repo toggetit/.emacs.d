@@ -116,15 +116,18 @@
   (doom-modeline-mode t))
 
 (use-package doom-themes
+  :autoload
+  (doom-themes-neotree-config)
   :config
+  (doom-themes-enable-bold t)
+  (doom-themes-enable-italic t)
   (load-theme 'doom-dracula t))
 
 (use-package all-the-icons
   :if (display-graphic-p))
 
 (use-package rainbow-delimiters
-  :hook
-  (prog-mode . rainbow-delimiters-mode))
+  :hook prog-mode)
 
 (use-package markdown-mode
   :ensure t
@@ -133,8 +136,7 @@
 
 ;; Flycheck part
 (use-package flycheck
-  :hook
-  (prog-mode . flycheck-mode))
+  :hook prog-mode)
 
 (use-package flycheck-yamllint
   :hook
@@ -143,8 +145,7 @@
 
 ;; Company part
 (use-package company
-  :hook
-  (prog-mode . company-mode))
+  :hook prog-mode)
 
 (use-package company-terraform
   :hook
@@ -155,6 +156,8 @@
 (use-package python-mode
   :hook
   (python-mode . (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace))))
+
+(use-package jinja2-mode)
 
 (use-package puppet-mode
   :custom
