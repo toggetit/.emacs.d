@@ -118,9 +118,10 @@
 (use-package doom-themes
   :autoload
   (doom-themes-neotree-config)
-  :config
+  :custom
   (doom-themes-enable-bold t)
   (doom-themes-enable-italic t)
+  :config
   (load-theme 'doom-dracula t))
 
 (use-package all-the-icons
