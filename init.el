@@ -118,9 +118,10 @@
 (use-package doom-themes
   :autoload
   (doom-themes-neotree-config)
-  :config
+  :custom
   (doom-themes-enable-bold t)
   (doom-themes-enable-italic t)
+  :config
   (load-theme 'doom-dracula t))
 
 (use-package all-the-icons
@@ -129,8 +130,12 @@
 (use-package rainbow-delimiters
   :hook prog-mode)
 
+(use-package neotree
+  :custom
+  (neo-smart-open t)
+  (projectile-witch-project-action 'neotree-projectile-action))
+
 (use-package markdown-mode
-  :ensure t
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown"))
 
@@ -191,13 +196,11 @@
   (add-to-list 'auto-mode-alist '("compose[^/]*\\.ya?ml$" . docker-compose-mode)))
 
 (use-package k8s-mode
-  :ensure t
   :hook
   (k8s-mode . yas-minor-mode))
 
 (use-package kubernetes
-  :ensure t
   :commands (kubernetes-overview)
-  :config
-  (setq kubernetes-poll-frequency 3600
-        kubernetes-redraw-frequency 3600))
+  :custom
+  (kubernetes-poll-frequency 3600)
+  (kubernetes-redraw-frequency 3600))
