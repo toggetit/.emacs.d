@@ -116,13 +116,12 @@
   (doom-modeline-mode t))
 
 (use-package doom-themes
-  :autoload
-  (doom-themes-neotree-config)
-  :custom
-  (doom-themes-enable-bold t)
-  (doom-themes-enable-italic t)
   :config
-  (load-theme 'doom-dracula t))
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  (load-theme 'doom-dracula t)
+  (doom-themes-neotree-config)
+  (doom-themes-org-config))
 
 (use-package all-the-icons
   :if (display-graphic-p))
