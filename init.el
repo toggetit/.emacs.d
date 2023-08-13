@@ -123,8 +123,12 @@
   (doom-themes-neotree-config)
   (doom-themes-org-config))
 
+;; Need to M-x all-the-icons-install-fonts
 (use-package all-the-icons
   :if (display-graphic-p))
+
+;; Need to M-x nerd-icons-install-fonts
+(use-package nerd-icons)
 
 (use-package rainbow-delimiters
   :hook prog-mode)
@@ -132,7 +136,7 @@
 (use-package neotree
   :custom
   (neo-smart-open t)
-  (projectile-witch-project-action 'neotree-projectile-action))
+  (projectile-switch-project-action 'neotree-projectile-action))
 
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
