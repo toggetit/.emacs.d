@@ -84,8 +84,16 @@
   (:map helm-map
         ([?\t] . helm-next-line)
         ([backtab] . helm-previous-line))
+  ;; :config
+  ;; (helm-mode 1)
   :custom
   (helm-split-window-inside-p t))
+
+(use-package helm-icons
+  :config
+  (helm-icons-enable)
+  :custom
+  (helm-icons-provider 'all-the-icons))
 
 (use-package helm-projectile
   :custom
@@ -143,7 +151,8 @@
 
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
-  :init (setq markdown-command "multimarkdown"))
+  :custom
+  (markdown-command "multimarkdown"))
 
 ;; Flycheck part
 (use-package flycheck
@@ -210,4 +219,3 @@
   :custom
   (kubernetes-poll-frequency 3600)
   (kubernetes-redraw-frequency 3600))
-
