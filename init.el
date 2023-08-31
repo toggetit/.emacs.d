@@ -91,9 +91,9 @@
   :custom
   (projectile-completion-system 'helm))
 
-(use-package swiper-helm
+(use-package helm-swoop
   :bind
-  ([remap isearch-forward] . swiper-helm))
+  ([remap isearch-forward] . helm-swoop-from-isearch))
 
 (use-package helm-c-yasnippet
   :custom
@@ -117,11 +117,11 @@
 
 (use-package doom-themes
   :config
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t)
   (load-theme 'doom-dracula t)
-  (doom-themes-neotree-config)
-  (doom-themes-org-config))
+  (doom-themes-org-config)
+  :custom
+  (doom-themes-enable-bold t)
+  (doom-themes-enable-italic t))
 
 ;; Need to M-x all-the-icons-install-fonts
 (use-package all-the-icons
@@ -135,6 +135,9 @@
 
 (use-package neotree
   :custom
+  ;; (neo-theme (if (display-graphic-p) 'icons 'arrow))
+  ;; (neo-theme (if (window-system) 'icons 'arrow))
+  (neo-theme 'icons)
   (neo-smart-open t)
   (projectile-switch-project-action 'neotree-projectile-action))
 
@@ -207,3 +210,4 @@
   :custom
   (kubernetes-poll-frequency 3600)
   (kubernetes-redraw-frequency 3600))
+
