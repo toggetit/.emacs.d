@@ -28,11 +28,14 @@
 (define-key global-map "\M-[1~" 'beginning-of-line)
 (define-key global-map [select] 'end-of-line)
 
+;; Sort lines key bind
+(global-set-key (kbd "C-c C-S") 'sort-lines)
+
 ;; Full screen start
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; Delete trailing whitespaces on c++-mode
-(add-hook 'c++-mode-hook
+(add-hook 'prog-mode-hook
     (lambda ()
       (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
 
@@ -103,6 +106,17 @@
   :bind
   ([remap isearch-forward] . helm-swoop-from-isearch))
 
+(use-package helm-gtags
+  :custom
+   (helm-gtags-ignore-case t)
+   (helm-gtags-auto-update t)
+   (helm-gtags-use-input-at-cursor t)
+   (helm-gtags-pulse-at-cursor t)
+   ;; (helm-gtags-prefix-key "\C-cg")
+   (helm-gtags-suggested-key-mapping t)
+  :hook
+  (c++-mode))
+
 (use-package helm-c-yasnippet
   :custom
   (helm-yas-space-match-any-greedy t)
@@ -147,7 +161,9 @@
   ;; (neo-theme (if (window-system) 'icons 'arrow))
   (neo-theme 'icons)
   (neo-smart-open t)
-  (projectile-switch-project-action 'neotree-projectile-action))
+  (projectile-switch-project-action 'neotree-projectile-action)
+  :hook
+  (neotree-projectile-action . projectile-find-file))
 
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
@@ -173,9 +189,7 @@
 ;; End company part
 
 ;; Variuos prog modes
-(use-package python-mode
-  :hook
-  (python-mode . (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace))))
+(use-package python-mode)
 
 (use-package jinja2-mode)
 
@@ -188,15 +202,11 @@
      "documentation"
      "inherits_across_namespaces"
      "selector_inside_resource"
-     "variable_scope"))
-  :hook
-  (puppet-mode . (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace))))
+     "variable_scope")))
 
 (use-package yaml-mode
   :custom
-  (flycheck-disabled-checkers '(yaml-ruby))
-  :hook
-  (yaml-mode . (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace))))
+  (flycheck-disabled-checkers '(yaml-ruby)))
 
 (use-package hcl-mode)
 
