@@ -161,9 +161,10 @@
   ;; (neo-theme (if (window-system) 'icons 'arrow))
   (neo-theme 'icons)
   (neo-smart-open t)
-  (projectile-switch-project-action 'neotree-projectile-action)
-  :hook
-  (neotree-projectile-action . projectile-find-file))
+  (projectile-switch-project-action
+   (lambda ()
+     (neotree-projectile-action)
+     (projectile-find-file))))
 
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
