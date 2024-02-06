@@ -58,7 +58,9 @@
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
 
-(use-package magit)
+(use-package magit
+  :custom
+  (magit-completing-read-function 'helm--completing-read-default))
 
 (use-package gitlab-ci-mode)
 
@@ -98,13 +100,8 @@
   (helm-icons-provider 'all-the-icons))
 
 (use-package helm-projectile
-  :bind
-  ([remap projectile-find-file] . helm-projectile-find-file)
-  ([remap projectile-grep] . helm-projectile-grep)
-  ([remap projectile-switch-project] . helm-projectile-switch-project)
-  ([remap projectile-switch-to-buffer] . helm-projectile-switch-to-buffer)
-  :custom
-  (projectile-completion-system 'helm))
+  :config
+  (helm-projectile-on))
 
 (use-package helm-swoop
   :bind
@@ -168,7 +165,7 @@
   (projectile-switch-project-action
    (lambda ()
      (neotree-projectile-action)
-     (projectile-find-file))))
+     (helm-projectile-find-file))))
 
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
