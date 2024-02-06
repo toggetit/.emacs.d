@@ -60,6 +60,8 @@
 
 (use-package magit)
 
+(use-package gitlab-ci-mode)
+
 (use-package projectile
   :custom
   (projectile-enable-caching t)
@@ -84,9 +86,6 @@
   ([remap find-file] . helm-find-files)
   ([remap isearch-backward] . previous-complete-history-element)
   ([remap switch-to-buffer] . helm-buffers-list)
-  (:map helm-map
-        ([?\t] . helm-next-line)
-        ([backtab] . helm-previous-line))
   ;; :config
   ;; (helm-mode 1)
   :custom
@@ -99,6 +98,11 @@
   (helm-icons-provider 'all-the-icons))
 
 (use-package helm-projectile
+  :bind
+  ([remap projectile-switch-project] . helm-projectile-switch-project)
+  ([remap projectile-switch-to-buffer] . helm-projectile-switch-to-buffer)
+  ([remap projectile-find-file] . helm-projectile-find-file)
+  ([remap projectile-grep] . helm-projectile-grep)
   :custom
   (projectile-completion-system 'helm))
 
@@ -108,12 +112,12 @@
 
 (use-package helm-gtags
   :custom
-   (helm-gtags-ignore-case t)
-   (helm-gtags-auto-update t)
-   (helm-gtags-use-input-at-cursor t)
-   (helm-gtags-pulse-at-cursor t)
-   ;; (helm-gtags-prefix-key "\C-cg")
-   (helm-gtags-suggested-key-mapping t)
+  (helm-gtags-ignore-case t)
+  (helm-gtags-auto-update t)
+  (helm-gtags-use-input-at-cursor t)
+  (helm-gtags-pulse-at-cursor t)
+  ;; (helm-gtags-prefix-key "\C-cg")
+  (helm-gtags-suggested-key-mapping t)
   :hook
   (c++-mode))
 
@@ -230,3 +234,4 @@
   :custom
   (kubernetes-poll-frequency 3600)
   (kubernetes-redraw-frequency 3600))
+(put 'upcase-region 'disabled nil)
