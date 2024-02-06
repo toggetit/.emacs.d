@@ -99,10 +99,10 @@
 
 (use-package helm-projectile
   :bind
-  ([remap projectile-switch-project] . helm-projectile-switch-project)
-  ([remap projectile-switch-to-buffer] . helm-projectile-switch-to-buffer)
   ([remap projectile-find-file] . helm-projectile-find-file)
   ([remap projectile-grep] . helm-projectile-grep)
+  ([remap projectile-switch-project] . helm-projectile-switch-project)
+  ([remap projectile-switch-to-buffer] . helm-projectile-switch-to-buffer)
   :custom
   (projectile-completion-system 'helm))
 
