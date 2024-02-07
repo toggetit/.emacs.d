@@ -58,6 +58,11 @@
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
 
+;; Persist history over Emacs restarts.
+(use-package savehist
+  :init
+  (savehist-mode))
+
 (use-package magit
   :custom
   (magit-completing-read-function 'helm--completing-read-default))
