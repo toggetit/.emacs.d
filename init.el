@@ -1,4 +1,14 @@
+;;; init.el --- private config file -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;; https://github.com/toggetit/.emacs.d
+
+;;; Code:
+
 (setq custom-file (make-temp-file "emacs-custom-"))
+
+(put 'upcase-region 'disabled nil)
 
 (custom-set-variables
  '(column-number-indicator-zero-based nil)
@@ -66,6 +76,9 @@
 (use-package magit
   :custom
   (magit-completing-read-function 'helm--completing-read-default))
+
+(use-package forge
+  :after magit)
 
 (use-package gitlab-ci-mode)
 
@@ -236,4 +249,9 @@
   :custom
   (kubernetes-poll-frequency 3600)
   (kubernetes-redraw-frequency 3600))
-(put 'upcase-region 'disabled nil)
+
+;;; Load local customization
+(load-file "~/.emacs.d/local.el")
+
+(provide 'init)
+;;; init.el ends here
