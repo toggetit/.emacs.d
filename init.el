@@ -174,16 +174,16 @@
 (use-package rainbow-delimiters
   :hook prog-mode)
 
-(use-package neotree
-  :custom
-  ;; (neo-theme (if (display-graphic-p) 'icons 'arrow))
-  ;; (neo-theme (if (window-system) 'icons 'arrow))
-  (neo-theme 'icons)
-  (neo-smart-open t)
-  (projectile-switch-project-action
-   (lambda ()
-     (neotree-projectile-action)
-     (helm-projectile-find-file))))
+;; (use-package neotree
+;;   :custom
+;;   ;; (neo-theme (if (display-graphic-p) 'icons 'arrow))
+;;   ;; (neo-theme (if (window-system) 'icons 'arrow))
+;;   (neo-theme 'icons)
+;;   (neo-smart-open t))
+;;   ;; (projectile-switch-project-action
+;;   ;;  (lambda ()
+;;   ;;    (neotree-projectile-action)
+;;   ;;    (helm-projectile-find-file))))
 
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
@@ -249,6 +249,38 @@
   :custom
   (kubernetes-poll-frequency 3600)
   (kubernetes-redraw-frequency 3600))
+
+(use-package treemacs
+  :ensure t
+  :defer t
+  :custom
+  (treemacs-width 27)
+  (treemacs-follow-mode t)
+  (treemacs-filewatch-mode t)
+  (treemacs-text-scale -3)
+  (treemacs-resize-icons 44)
+  (treemacs-git-commit-diff-mode t)
+  :bind-keymap
+  ("C-c t p" . treemacs-project-map)
+  ("C-c t w" . treemacs-workspace-map))
+
+(use-package treemacs-projectile
+  :after (treemacs projectile)
+  :ensure t)
+
+(use-package treemacs-icons-dired
+  :hook (dired-mode . treemacs-icons-dired-enable-once)
+  :ensure t)
+
+(use-package treemacs-magit
+  :after (treemacs magit)
+  :ensure t)
+
+(use-package treemacs-nerd-icons
+  :after (treemacs nerd-icons)
+  :ensure t)
+
+(treemacs-start-on-boot)
 
 ;;; Load local customization
 (load-file "~/.emacs.d/local.el")
