@@ -174,17 +174,6 @@
 (use-package rainbow-delimiters
   :hook prog-mode)
 
-;; (use-package neotree
-;;   :custom
-;;   ;; (neo-theme (if (display-graphic-p) 'icons 'arrow))
-;;   ;; (neo-theme (if (window-system) 'icons 'arrow))
-;;   (neo-theme 'icons)
-;;   (neo-smart-open t))
-;;   ;; (projectile-switch-project-action
-;;   ;;  (lambda ()
-;;   ;;    (neotree-projectile-action)
-;;   ;;    (helm-projectile-find-file))))
-
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
   :custom
@@ -239,16 +228,6 @@
 (use-package docker-compose-mode
   :init
   (add-to-list 'auto-mode-alist '("compose[^/]*\\.ya?ml$" . docker-compose-mode)))
-
-(use-package k8s-mode
-  :hook
-  (k8s-mode . yas-minor-mode))
-
-(use-package kubernetes
-  :commands (kubernetes-overview)
-  :custom
-  (kubernetes-poll-frequency 3600)
-  (kubernetes-redraw-frequency 3600))
 
 (use-package treemacs
   :ensure t
