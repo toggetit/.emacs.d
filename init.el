@@ -232,6 +232,8 @@
 (use-package treemacs
   :ensure t
   :defer t
+  :init
+  (treemacs-start-on-boot)
   :custom
   (treemacs-width 27)
   (treemacs-follow-mode t)
