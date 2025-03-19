@@ -259,7 +259,10 @@
   :after (treemacs nerd-icons)
   :ensure t)
 
-(treemacs-start-on-boot)
+(use-package exec-path-from-shell
+  :config
+  (when (memq window-system '(mac ns))
+    (exec-path-from-shell-initialize)))
 
 ;;; Load local customization
 (load-file "~/.emacs.d/local.el")
