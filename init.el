@@ -29,8 +29,7 @@
  '(use-short-answers t)
  '(y-or-n-p-use-read-key t t))
 
-(custom-set-faces
- '(default ((t (:family "Droid Sans Mono" :height 140)))))
+(set-face-attribute 'default nil :family "Roboto Mono" :height 140)
 
 (put 'downcase-region 'disabled nil)
 
