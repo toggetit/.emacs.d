@@ -231,8 +231,6 @@
 (use-package treemacs
   :ensure t
   :defer t
-  :init
-  (treemacs-start-on-boot)
   :custom
   (treemacs-width 27)
   (treemacs-follow-mode t)
@@ -264,6 +262,8 @@
   :config
   (when (memq window-system '(mac ns))
     (exec-path-from-shell-initialize)))
+
+(treemacs-start-on-boot)
 
 ;;; Load local customization
 (load-file "~/.emacs.d/local.el")
