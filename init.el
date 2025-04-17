@@ -27,6 +27,7 @@
  '(tab-always-indent 'complete)
  '(tool-bar-mode nil)
  '(use-short-answers t)
+ '(save-place-mode 1)
  '(y-or-n-p-use-read-key t t))
 
 (set-face-attribute 'default nil :family "RobotoMono Nerd Font Mono" :height 120)
