@@ -8,8 +8,6 @@
 
 (setq custom-file (make-temp-file "emacs-custom-"))
 
-(put 'upcase-region 'disabled nil)
-
 (custom-set-variables
  '(column-number-indicator-zero-based nil)
  '(column-number-mode t)
@@ -33,13 +31,14 @@
 (set-face-attribute 'default nil :family "RobotoMono Nerd Font Mono" :height 120)
 
 (put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
 
 ;; PuTTY fix. Ugly. Bad. But it works. (Good)
 (define-key global-map "\M-[1~" 'beginning-of-line)
 (define-key global-map [select] 'end-of-line)
 
 ;; Sort lines key bind
-(global-set-key (kbd "C-c C-S") 'sort-lines)
+(global-set-key (kbd "C-c C-s") 'sort-lines)
 
 ;; Full screen start
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
