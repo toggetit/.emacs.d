@@ -6,7 +6,8 @@
 
 ;;; Code:
 
-(setq custom-file (make-temp-file "emacs-custom-"))
+;; Disable customise
+(setq custom-file null-device)
 
 (custom-set-variables
  '(column-number-indicator-zero-based nil)
