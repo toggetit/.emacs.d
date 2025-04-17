@@ -29,7 +29,7 @@
  '(use-short-answers t)
  '(y-or-n-p-use-read-key t t))
 
-(set-face-attribute 'default nil :family "Roboto Mono" :height 140)
+(set-face-attribute 'default nil :family "RobotoMono Nerd Font Mono" :height 120)
 
 (put 'downcase-region 'disabled nil)
 
