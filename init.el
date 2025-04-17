@@ -74,7 +74,8 @@
 
 (use-package magit
   :custom
-  (magit-completing-read-function 'helm--completing-read-default))
+  (magit-completing-read-function 'helm--completing-read-default)
+  (magit-log-section-commit-count 15))
 
 (use-package forge
   :after magit)
