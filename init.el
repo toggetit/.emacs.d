@@ -268,7 +268,9 @@
 (treemacs-start-on-boot)
 
 ;;; Load local customization
-(load-file "~/.emacs.d/local.el")
+(defvar local-custom-file (concat user-emacs-directory "local.el"))
+(when (file-exists-p local-custom-file)
+  (load local-custom-file))
 
 (provide 'init)
 ;;; init.el ends here
