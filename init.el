@@ -107,6 +107,9 @@
   ([remap find-file] . helm-find-files)
   ([remap isearch-backward] . previous-complete-history-element)
   ([remap switch-to-buffer] . helm-buffers-list)
+  (:map helm-map
+        ("<tab>" . helm-execute-persistent-action)
+        ("TAB" . helm-execute-persistent-action))
   ;; :config
   ;; (helm-mode 1)
   :custom
