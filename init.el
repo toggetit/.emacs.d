@@ -9,25 +9,25 @@
 ;; Disable customise
 (setq custom-file null-device)
 
-(custom-set-variables
- '(column-number-indicator-zero-based nil)
- '(column-number-mode t)
- '(current-language-environment "UTF-8")
- '(electric-pair-mode t)
- '(global-display-line-numbers-mode t)
- '(history-delete-duplicates t)
- '(indent-tabs-mode nil)
- '(kill-do-not-save-duplicates t)
- '(kill-read-only-ok t)
- '(make-backup-files nil)
- '(ring-bell-function #'ignore)
- '(scroll-preserve-screen-position t)
- '(standard-indent 2)
- '(tab-always-indent 'complete)
- '(tool-bar-mode nil)
- '(use-short-answers t)
- '(save-place-mode 1)
- '(y-or-n-p-use-read-key t t))
+(setopt
+ column-number-indicator-zero-based nil
+ column-number-mode t
+ current-language-environment "UTF-8"
+ electric-pair-mode t
+ global-display-line-numbers-mode t
+ history-delete-duplicates t
+ indent-tabs-mode nil
+ kill-do-not-save-duplicates t
+ kill-read-only-ok t
+ make-backup-files nil
+ ring-bell-function #'ignore
+ scroll-preserve-screen-position t
+ standard-indent 2
+ tab-always-indent 'complete
+ tool-bar-mode nil
+ use-short-answers t
+ save-place-mode 1
+ y-or-n-p-use-read-key t)
 
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
