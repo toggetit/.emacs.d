@@ -29,8 +29,6 @@
  '(save-place-mode 1)
  '(y-or-n-p-use-read-key t t))
 
-(set-face-attribute 'default nil :family "RobotoMono Nerd Font Mono" :height 120)
-
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 
