@@ -28,7 +28,7 @@
  tab-always-indent 'complete
  tool-bar-mode nil
  use-short-answers t
- save-place-mode 1
+ save-place-mode t
  y-or-n-p-use-read-key t)
 
 (put 'downcase-region 'disabled nil)
