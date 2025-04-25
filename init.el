@@ -6,13 +6,15 @@
 
 ;;; Code:
 
+(prefer-coding-system 'utf-8-unix)
+(set-language-environment "UTF-8")
+
 ;; Disable customise
 (setq custom-file null-device)
 
 (setopt
  column-number-indicator-zero-based nil
  column-number-mode t
- current-language-environment "UTF-8"
  electric-pair-mode t
  global-display-line-numbers-mode t
  history-delete-duplicates t
