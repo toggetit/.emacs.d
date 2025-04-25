@@ -9,8 +9,12 @@
 (prefer-coding-system 'utf-8-unix)
 (set-language-environment "UTF-8")
 
-;; Disable customise
-(setq custom-file null-device)
+;; Setup customize file
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+;; Setup local customization file
+(defvar local-custom-file (expand-file-name "local.el" user-emacs-directory))
+(when (file-exists-p local-custom-file)
+  (load local-custom-file))
 
 (setopt
  column-number-indicator-zero-based nil
@@ -269,11 +273,6 @@
     (exec-path-from-shell-initialize)))
 
 (treemacs-start-on-boot)
-
-;;; Load local customization
-(defvar local-custom-file (concat user-emacs-directory "local.el"))
-(when (file-exists-p local-custom-file)
-  (load local-custom-file))
 
 (provide 'init)
 ;;; init.el ends here
