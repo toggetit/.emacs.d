@@ -120,6 +120,8 @@
   (helm-split-window-inside-p t))
 
 (use-package helm-icons
+  :after
+  (all-the-icons)
   :config
   (helm-icons-enable)
   :custom
