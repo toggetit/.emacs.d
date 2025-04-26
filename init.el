@@ -214,10 +214,12 @@
   (terraform-mode . company-terraform-init))
 ;;; End company part
 
-;; Eglot
+;;; Eglot
 (use-package eglot
   :hook
-  (python-mode . eglot-ensure))
+  (python-mode . eglot-ensure)
+  ;; Disable flymake ugly way
+  (eglot-managed-mode . (lambda () (flymake-mode -1))))
 
 ;; Variuos prog modes
 (use-package python-mode)
