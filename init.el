@@ -201,14 +201,19 @@
   (flycheck-mode . flycheck-yamllint-setup))
 ;; End flycheck part
 
-;; Company part
+;;; Company part
+;; For company mode in python we need python lsp server package
 (use-package company
   :hook prog-mode)
+
+(use-package company-box
+  :hook (company-mode . company-box-mode))
 
 (use-package company-terraform
   :hook
   (terraform-mode . company-terraform-init))
-;; End company part
+;;; End company part
+
 
 ;; Variuos prog modes
 (use-package python-mode)
