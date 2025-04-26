@@ -224,6 +224,8 @@
 
 (use-package jinja2-mode)
 
+(use-package ruby-mode)
+
 (use-package puppet-mode
   :custom
   (flycheck-puppet-lint-disabled-checks
