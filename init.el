@@ -207,7 +207,7 @@
   :hook prog-mode)
 
 (use-package company-box
-  :hook (company-mode . company-box-mode))
+  :hook company-mode)
 
 (use-package company-terraform
   :hook
