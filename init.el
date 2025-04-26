@@ -116,8 +116,8 @@
   (:map helm-map
         ("<tab>" . helm-execute-persistent-action)
         ("TAB" . helm-execute-persistent-action))
-  ;; :config
-  ;; (helm-mode 1)
+  :config
+  (helm-mode 1)
   :custom
   (helm-split-window-inside-p t))
 
