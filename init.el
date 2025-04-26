@@ -25,14 +25,15 @@
  indent-tabs-mode nil
  kill-do-not-save-duplicates t
  kill-read-only-ok t
+ load-prefer-newer t
  make-backup-files nil
  ring-bell-function #'ignore
+ save-place-mode t
  scroll-preserve-screen-position t
  standard-indent 2
  tab-always-indent 'complete
  tool-bar-mode nil
  use-short-answers t
- save-place-mode t
  y-or-n-p-use-read-key t)
 
 (put 'downcase-region 'disabled nil)
