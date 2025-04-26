@@ -241,6 +241,10 @@
   :init
   (add-to-list 'auto-mode-alist '("compose[^/]*\\.ya?ml$" . docker-compose-mode)))
 
+(use-package beacon
+  :config
+  (beacon-mode t))
+
 (use-package treemacs
   :ensure t
   :defer t
