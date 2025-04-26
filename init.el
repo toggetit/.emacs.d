@@ -23,6 +23,7 @@
  global-display-line-numbers-mode t
  history-delete-duplicates t
  indent-tabs-mode nil
+ inhibit-startup-screen t
  kill-do-not-save-duplicates t
  kill-read-only-ok t
  load-prefer-newer t
