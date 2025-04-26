@@ -230,6 +230,8 @@
   :custom
   (flycheck-disabled-checkers '(yaml-ruby)))
 
+(use-package json-mode)
+
 (use-package hcl-mode)
 
 (use-package terraform-mode
