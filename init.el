@@ -214,6 +214,10 @@
   (terraform-mode . company-terraform-init))
 ;;; End company part
 
+;; Eglot
+(use-package eglot
+  :hook
+  ((python-mode . eglot-ensure))
 
 ;; Variuos prog modes
 (use-package python-mode)
