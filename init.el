@@ -246,6 +246,13 @@
   :config
   (beacon-mode t))
 
+(use-package undo-tree
+  :config
+  (global-undo-tree-mode t)
+  :custom
+  (undo-tree-visualizer-diff t)
+  (undo-tree-visualizer-timestamps t))
+
 (use-package treemacs
   :ensure t
   :defer t
