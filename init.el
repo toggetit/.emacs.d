@@ -217,7 +217,7 @@
 ;; Eglot
 (use-package eglot
   :hook
-  ((python-mode . eglot-ensure))
+  (python-mode . eglot-ensure))
 
 ;; Variuos prog modes
 (use-package python-mode)
