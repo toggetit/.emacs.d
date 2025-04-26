@@ -111,6 +111,7 @@
   ([remap find-file] . helm-find-files)
   ([remap isearch-backward] . previous-complete-history-element)
   ([remap switch-to-buffer] . helm-buffers-list)
+  ([remap yank-pop] . helm-show-kill-ring)
   (:map helm-map
         ("<tab>" . helm-execute-persistent-action)
         ("TAB" . helm-execute-persistent-action))
