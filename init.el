@@ -221,9 +221,6 @@
   ;; Disable flymake ugly way
   (eglot-managed-mode . (lambda () (flymake-mode -1))))
 
-;; Variuos prog modes
-(use-package python-mode)
-
 (use-package jinja2-mode)
 
 (use-package ruby-mode)
