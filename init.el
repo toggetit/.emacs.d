@@ -40,6 +40,13 @@
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 
+;; OSX compatible bindings
+(when (memq window-system '(mac ns x))
+  (global-set-key [home] 'move-beginning-of-line)
+  (global-set-key [end] 'move-end-of-line)
+  (setq mac-command-modifier 'meta
+        mac-option-modifier 'none))
+
 ;; PuTTY fix. Ugly. Bad. But it works. (Good)
 (define-key global-map "\M-[1~" 'beginning-of-line)
 (define-key global-map [select] 'end-of-line)
