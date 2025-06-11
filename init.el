@@ -262,8 +262,8 @@
 (use-package dockerfile-mode)
 
 (use-package docker-compose-mode
-  :init
-  (add-to-list 'auto-mode-alist '("compose[^/]*\\.ya?ml$" . docker-compose-mode)))
+  :mode
+  ("compose[^/]*\\.ya?ml$" . docker-compose-mode))
 
 (use-package beacon
   :config
