@@ -232,6 +232,10 @@
 
 (use-package ruby-mode)
 
+(use-package web-mode
+  :mode
+  ("\\.erb\\'" . web-mode))
+
 (use-package puppet-mode
   :custom
   (flycheck-puppet-lint-disabled-checks
