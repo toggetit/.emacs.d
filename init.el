@@ -142,10 +142,6 @@
   :config
   (helm-projectile-on))
 
-(use-package helm-swoop
-  :bind
-  ([remap isearch-forward] . helm-swoop-from-isearch))
-
 (use-package helm-gtags
   :custom
   (helm-gtags-ignore-case t)
