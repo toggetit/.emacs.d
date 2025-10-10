@@ -121,6 +121,7 @@
   ([remap isearch-backward] . previous-complete-history-element)
   ([remap switch-to-buffer] . helm-mini)
   ([remap yank-pop] . helm-show-kill-ring)
+  ([remap isearch-forward] . helm-occur)
   (:map helm-map
         ("<tab>" . helm-execute-persistent-action)
         ("TAB" . helm-execute-persistent-action))
@@ -276,6 +277,8 @@
   (undo-tree-visualizer-diff t)
   (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
   (undo-tree-visualizer-timestamps t))
+
+(use-package etc-sudoers-mode)
 
 ;; (use-package treemacs
 ;;   :ensure t
