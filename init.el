@@ -276,35 +276,39 @@
 
 (use-package etc-sudoers-mode)
 
-;; (use-package treemacs
-;;   :ensure t
-;;   :defer t
-;;   :custom
-;;   (treemacs-width 27)
-;;   (treemacs-follow-mode t)
-;;   (treemacs-filewatch-mode t)
-;;   (treemacs-text-scale -3)
-;;   (treemacs-resize-icons 44)
-;;   (treemacs-git-commit-diff-mode t)
-;;   :bind-keymap
-;;   ("C-c t p" . treemacs-project-map)
-;;   ("C-c t w" . treemacs-workspace-map))
+(use-package treemacs
+  :ensure t
+  :defer t
+  :config
+  (treemacs-follow-mode t)
+  (treemacs-filewatch-mode t)
+  (treemacs-fringe-indicator-mode 'always)
+  (treemacs-git-commit-diff-mode t)
+  :custom
+  ;; (treemacs-width 27)
+  (treemacs-is-never-other-window t)
+  (treemacs-project-follow-cleanup t)
+  ;; (treemacs-text-scale -3)
+  ;; (treemacs-resize-icons 44)
+  :bind-keymap
+  ("C-c t p" . treemacs-project-map)
+  ("C-c t w" . treemacs-workspace-map))
 
-;; (use-package treemacs-projectile
-;;   :after (treemacs projectile)
-;;   :ensure t)
+(use-package treemacs-projectile
+  :after (treemacs projectile)
+  :ensure t)
 
 ;; (use-package treemacs-icons-dired
 ;;   :hook (dired-mode . treemacs-icons-dired-enable-once)
 ;;   :ensure t)
 
-;; (use-package treemacs-magit
-;;   :after (treemacs magit)
-;;   :ensure t)
+(use-package treemacs-magit
+  :after (treemacs magit)
+  :ensure t)
 
-;; (use-package treemacs-nerd-icons
-;;   :after (treemacs nerd-icons)
-;;   :ensure t)
+(use-package treemacs-nerd-icons
+  :after (treemacs nerd-icons)
+  :ensure t)
 
 (use-package exec-path-from-shell
   :config
