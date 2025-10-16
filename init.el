@@ -130,14 +130,6 @@
   :custom
   (helm-split-window-inside-p t))
 
-(use-package helm-icons
-  :after
-  (all-the-icons)
-  :config
-  (helm-icons-enable)
-  :custom
-  (helm-icons-provider 'all-the-icons))
-
 (use-package helm-projectile
   :config
   (helm-projectile-on))
@@ -288,7 +280,7 @@
   ;; (treemacs-width 27)
   (treemacs-is-never-other-window t)
   (treemacs-project-follow-cleanup t)
-  ;; (treemacs-text-scale -3)
+  (treemacs-text-scale -2)
   ;; (treemacs-resize-icons 44)
   :bind-keymap
   ("C-c t p" . treemacs-project-map)
@@ -303,8 +295,8 @@
 ;;   :ensure t)
 
 (use-package treemacs-magit
-  :after (treemacs magit)
-  :ensure t)
+ :after (treemacs magit)
+ :ensure t)
 
 (use-package treemacs-nerd-icons
   :after (treemacs nerd-icons)
