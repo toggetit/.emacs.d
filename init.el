@@ -271,13 +271,12 @@
 (use-package treemacs
   :ensure t
   :defer t
-  :config
-  (treemacs-follow-mode t)
-  (treemacs-filewatch-mode t)
-  (treemacs-fringe-indicator-mode 'always)
-  (treemacs-git-commit-diff-mode t)
   :custom
   ;; (treemacs-width 27)
+  (treemacs-filewatch-mode t)
+  (treemacs-follow-mode t)
+  (treemacs-fringe-indicator-mode 'always)
+  (treemacs-git-commit-diff-mode t)
   (treemacs-is-never-other-window t)
   (treemacs-project-follow-cleanup t)
   (treemacs-text-scale -2)
