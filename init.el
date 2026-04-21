@@ -275,12 +275,15 @@
   ;; (treemacs-width 27)
   (treemacs-filewatch-mode t)
   (treemacs-follow-mode t)
-  (treemacs-fringe-indicator-mode 'always)
+  ;; (treemacs-fringe-indicator-mode 'always)
   (treemacs-git-commit-diff-mode t)
   (treemacs-is-never-other-window t)
   (treemacs-project-follow-cleanup t)
   (treemacs-text-scale -2)
   ;; (treemacs-resize-icons 44)
+  :config
+  (add-to-list 'window-persistent-parameters
+               '(window-side . writable))
   :bind-keymap
   ("C-c t p" . treemacs-project-map)
   ("C-c t w" . treemacs-workspace-map))
@@ -307,6 +310,9 @@
     (exec-path-from-shell-initialize)))
 
 ;; (treemacs-start-on-boot)
+(use-package flycheck-golangci-lint
+  :ensure t
+  :hook (go-mode . flycheck-golangci-lint-setup))
 
 (provide 'init)
 ;;; init.el ends here
