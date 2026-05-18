@@ -222,6 +222,8 @@
 (use-package ruby-mode)
 
 (use-package web-mode
+  :config
+  (remove-hook 'before-save-hook 'delete-trailing-whitespace t)
   :mode
   ("\\.erb\\'" . web-mode))
 
@@ -275,7 +277,7 @@
   ;; (treemacs-width 27)
   (treemacs-filewatch-mode t)
   (treemacs-follow-mode t)
-  ;; (treemacs-fringe-indicator-mode 'always)
+  (treemacs-fringe-indicator-mode always)
   (treemacs-git-commit-diff-mode t)
   (treemacs-is-never-other-window t)
   (treemacs-project-follow-cleanup t)
