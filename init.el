@@ -242,6 +242,9 @@
   :custom
   (flycheck-disabled-checkers '(yaml-ruby)))
 
+(use-package yaml-pro
+  :hook (yaml-mode . yaml-pro-mode))
+
 (use-package json-mode)
 
 (use-package hcl-mode)
@@ -277,7 +280,7 @@
   ;; (treemacs-width 27)
   (treemacs-filewatch-mode t)
   (treemacs-follow-mode t)
-  (treemacs-fringe-indicator-mode always)
+  (treemacs-fringe-indicator-mode 'always)
   (treemacs-git-commit-diff-mode t)
   (treemacs-is-never-other-window t)
   (treemacs-project-follow-cleanup t)
