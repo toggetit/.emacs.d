@@ -217,6 +217,39 @@
   ;; Disable flymake ugly way
   (eglot-managed-mode . (lambda () (flymake-mode -1))))
 
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  (treesit-auto-langs
+   '(awk bash c cpp cmake dockerfile json go go-mod html make markdown puppet python r ruby rust toml yaml))
+  (treesit-language-source-alist
+   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+     (c "https://github.com/tree-sitter/tree-sitter-c")
+     (cmake "https://github.com/uyha/tree-sitter-cmake")
+     (commonlisp "https://github.com/theHamsta/tree-sitter-commonlisp")
+     (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+     (dockerfile "https://github.com/wharflab/tree-sitter-containerfile")
+     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+     (go "https://github.com/tree-sitter/tree-sitter-go")
+     (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
+     (html "https://github.com/tree-sitter/tree-sitter-html")
+     (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+     (json "https://github.com/tree-sitter/tree-sitter-json")
+     (lua "https://github.com/Azganoth/tree-sitter-lua")
+     (make "https://github.com/alemuller/tree-sitter-make")
+     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+     (puppet "https://github.com/smoeding/tree-sitter-puppet")
+     (python "https://github.com/tree-sitter/tree-sitter-python")
+     (r "https://github.com/r-lib/tree-sitter-r")
+     (rust "https://github.com/tree-sitter/tree-sitter-rust")
+     (toml "https://github.com/tree-sitter/tree-sitter-toml")
+     (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+     (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
+     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
+
 (use-package jinja2-mode)
 
 (use-package ruby-mode)
@@ -227,7 +260,18 @@
   :mode
   ("\\.erb\\'" . web-mode))
 
-(use-package puppet-mode
+;; (use-package puppet-mode
+;;   :custom
+;;   (flycheck-puppet-lint-disabled-checks
+;;    '("80chars"
+;;      "140chars"
+;;      "autoloader_layout"
+;;      "documentation"
+;;      "inherits_across_namespaces"
+;;      "selector_inside_resource"
+;;      "variable_scope")))
+
+(use-package puppet-ts-mode
   :custom
   (flycheck-puppet-lint-disabled-checks
    '("80chars"
@@ -243,7 +287,9 @@
   (flycheck-disabled-checkers '(yaml-ruby)))
 
 (use-package yaml-pro
-  :hook (yaml-mode . yaml-pro-mode))
+  :hook ((yaml-mode . yaml-pro-mode)
+         (yaml-ts-mode . yaml-pro-ts-mode)
+         (yaml-pro-ts-mode . eldoc-mode)))
 
 (use-package json-mode)
 
