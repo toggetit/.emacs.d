@@ -116,6 +116,17 @@
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
 
+;; ==============================================================================
+;; 14. SYSTEM ENVIRONMENT PATH SYNCHRONIZATION
+;; ==============================================================================
+(use-package exec-path-from-shell
+  :ensure t
+  ;; If Emacs runs as a headless systemd daemon or under macOS,
+  ;; we must explicitly synchronize the internal exec-path matrix with the user shell environment.
+  :init
+  (when (or (daemonp) (memq window-system '(mac ns)))
+    (exec-path-from-shell-initialize)))
+
 (use-package vterm)
 
 ;; Persist history over Emacs restarts.
@@ -239,8 +250,8 @@
 (use-package corfu
   :ensure t
   ;; Corfu is designed to hook into standard Emacs completion-at-point mechanics
-  :hook ((prog-mode . corfu-mode)
-         (yaml-ts-mode . corfu-mode))
+  :hook
+  (prog-mode . corfu-mode)
   :bind
   ;; Snappy navigation inside the active popup menu
   (:map corfu-map
@@ -314,38 +325,50 @@
   (add-to-list 'eglot-stay-out-of 'flymake)
   (setq eglot-events-buffer-size 0)) ; Disabling logging completely saves CPU cycles
 
+;; ==============================================================================
+;; SYSTEM-WIDE DEV ENVIRONMENT DEPENDENCIES (FEDORA LINUX DNF INFRASTRUCTURE)
+;; ==============================================================================
+;; To unleash the full power of Eglot (LSP) and Flycheck (Diagnostics) inside
+;; this configuration, install the respective native system binaries via DNF.
+;;
+;; [CORE LANGUAGES & COMPILERS]
+;; C / C++:      $ sudo dnf install gcc-c++ clang-tools-extra
+;; Go Language:  $ sudo dnf install golang golang-x-tools-gopls golangci-lint
+;; Python:       $ sudo dnf install python3-lsp-server python3-flake8
+;; Bash Shell:   $ sudo dnf install nodejs-bash-language-server shellcheck
+;; Ruby:         $ sudo dnf install ruby-devel (Note: solargraph requires 'gem install solargraph')
+;;
+;; [INFRASTRUCTURE AS CODE & CONFIGURATIONS]
+;; Terraform:    $ sudo dnf config-manager --add-repo https://hashicorp.com
+;;               $ sudo dnf install terraform terraform-ls
+;; Dockerfiles:  $ sudo dnf install nodejs && sudo npm install -g dockerfile-language-server-nodejs
+;; YAML Syntax:  $ sudo dnf install yamllint && sudo npm install -g yaml-language-server
+;; JSON Layout:  $ sudo dnf install nodejs && sudo npm install -g vscode-json-languageserver
+;; Markdown:     $ sudo dnf install python3-markdown python3-mdformat
+;; ==============================================================================
+
+;; ==============================================================================
+;; 12. NATIVE SYNTAX PARSING INFRASTRUCTURE (TREE-SITTER)
+;; ==============================================================================
 (use-package treesit-auto
+  :ensure t
+  :functions global-treesit-auto-mode
   :custom
+  ;; MAX COMPATIBILITY: Force Emacs to prompt before compiling new language grammars
   (treesit-auto-install 'prompt)
+
+  ;; HIGH-FIDELITY TYPOGRAPHY: Set maximum syntax highlighting depth (Level 4).
+  ;; This unlocks gorgeous, rich color coding inside your Doom-Dracula theme!
+  (treesit-font-lock-level 4)
+
+  ;; List of active languages we want to automatically manage via Tree-sitter
   (treesit-auto-langs
    '(awk bash c cpp cmake dockerfile json go go-mod html make markdown puppet python r ruby rust toml yaml))
-  (treesit-language-source-alist
-   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-     (c "https://github.com/tree-sitter/tree-sitter-c")
-     (cmake "https://github.com/uyha/tree-sitter-cmake")
-     (commonlisp "https://github.com/theHamsta/tree-sitter-commonlisp")
-     (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-     (dockerfile "https://github.com/wharflab/tree-sitter-containerfile")
-     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-     (go "https://github.com/tree-sitter/tree-sitter-go")
-     (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
-     (html "https://github.com/tree-sitter/tree-sitter-html")
-     (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
-     (json "https://github.com/tree-sitter/tree-sitter-json")
-     (lua "https://github.com/Azganoth/tree-sitter-lua")
-     (make "https://github.com/alemuller/tree-sitter-make")
-     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-     (puppet "https://github.com/smoeding/tree-sitter-puppet")
-     (python "https://github.com/tree-sitter/tree-sitter-python")
-     (r "https://github.com/r-lib/tree-sitter-r")
-     (rust "https://github.com/tree-sitter/tree-sitter-rust")
-     (toml "https://github.com/tree-sitter/tree-sitter-toml")
-     (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
-     (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
-     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
   :config
+  ;; Instruct the engine to map ALL supported extensions to native *-ts-modes
   (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
+  ;; Explicitly pass parameter 1 to guarantee robust global activation
+  (global-treesit-auto-mode 1))
 
 (use-package jinja2-mode)
 
@@ -356,17 +379,6 @@
   (remove-hook 'before-save-hook 'delete-trailing-whitespace t)
   :mode
   ("\\.erb\\'" . web-mode))
-
-;; (use-package puppet-mode
-;;   :custom
-;;   (flycheck-puppet-lint-disabled-checks
-;;    '("80chars"
-;;      "140chars"
-;;      "autoloader_layout"
-;;      "documentation"
-;;      "inherits_across_namespaces"
-;;      "selector_inside_resource"
-;;      "variable_scope")))
 
 (use-package puppet-ts-mode
   :custom
@@ -379,22 +391,40 @@
      "selector_inside_resource"
      "variable_scope")))
 
-(use-package yaml-mode
-  :custom
-  (flycheck-disabled-checkers '(yaml-ruby)))
-
+;; ==============================================================================
+;; 14. DATA SERIALIZATION MODES (YAML & JSON ECOSYSTEM)
+;; ==============================================================================
 (use-package yaml-pro
-  :hook ((yaml-mode . yaml-pro-mode)
-         (yaml-ts-mode . yaml-pro-ts-mode)
+  :ensure t
+  :defer t
+  ;; Strictly hooks into the native high-speed Tree-sitter viewport buffers.
+  ;; No legacy yaml-mode dependencies or regex-parsers are loaded in memory!
+  :hook ((yaml-ts-mode . yaml-pro-ts-mode)
          (yaml-pro-ts-mode . eldoc-mode)))
 
-(use-package json-mode)
+;; CORRECT MODERN JSON CONFIGURATION (Bypassing legacy json-mode)
+(use-package json-ts-mode
+  :ensure nil
+  :defer t
+  :mode "\\.json\\'"
+  ;; HARD FIX: Corrected syntax from underscore to hyphen to match the true hook name!
+  :hook (json-ts-mode . eglot-ensure))
 
-(use-package hcl-mode)
-
+;; ==============================================================================
+;; 15. INFRASTRUCTURE AS CODE (TERRAFORM & HCL MANAGEMENT)
+;; ==============================================================================
 (use-package terraform-mode
+  :ensure t
+  :defer t
+  ;; Handles both standard terraform manifests and general HashiCorp config files safely
+  :mode (("\\.tf\\'"  . terraform-mode)
+         ("\\.hcl\\'" . terraform-mode))
   :hook
-  (terraform-mode . terraform-format-on-save-mode))
+  (terraform-mode . terraform-format-on-save-mode)
+  :config
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+                 '(terraform-mode . ("terraform-ls" "serve")))))
 
 (use-package dockerfile-mode)
 
@@ -451,11 +481,6 @@
 (use-package treemacs-nerd-icons
   :after (treemacs nerd-icons)
   :ensure t)
-
-(use-package exec-path-from-shell
-  :config
-  (when (memq window-system '(mac ns))
-    (exec-path-from-shell-initialize)))
 
 ;; (treemacs-start-on-boot)
 (use-package flycheck-golangci-lint
