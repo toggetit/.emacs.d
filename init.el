@@ -298,12 +298,21 @@
   (add-to-list 'completion-at-point-functions #'cape-dabbrev t)
   (add-to-list 'completion-at-point-functions #'cape-file t))
 
-;;; Eglot
+;; ==============================================================================
+;; 11. NATIVE LANGUAGE SERVER PROTOCOL (EGLOT LSP SYSTEM)
+;; ==============================================================================
 (use-package eglot
+  ;; Eglot is built-in since Emacs 29.1, :ensure nil prevents external downloading
+  :ensure nil
+  :defer t
+  :custom
+  (eglot-events-buffer-size 0)
   :hook
-  (python-mode . eglot-ensure)
+  ((prog-mode . eglot-ensure)
+   (yaml-ts-mode . eglot-ensure))
   :config
-  (add-to-list 'eglot-stay-out-of 'flymake))
+  (add-to-list 'eglot-stay-out-of 'flymake)
+  (setq eglot-events-buffer-size 0)) ; Disabling logging completely saves CPU cycles
 
 (use-package treesit-auto
   :custom
