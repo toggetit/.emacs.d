@@ -47,10 +47,6 @@
   (setq mac-command-modifier 'meta
         mac-option-modifier 'none))
 
-;; PuTTY fix. Ugly. Bad. But it works. (Good)
-(define-key global-map "\M-[1~" 'beginning-of-line)
-(define-key global-map [select] 'end-of-line)
-
 ;; Sort lines key bind
 (global-set-key (kbd "C-c C-s") 'sort-lines)
 
@@ -73,10 +69,6 @@
         ("melpa" . "https://melpa.org/packages/")))
 (require 'package)
 (package-initialize)
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
 
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
@@ -123,7 +115,6 @@
   ([remap yank-pop] . helm-show-kill-ring)
   ([remap isearch-forward] . helm-occur)
   (:map helm-map
-        ("<tab>" . helm-execute-persistent-action)
         ("TAB" . helm-execute-persistent-action))
   :config
   (helm-mode 1)
@@ -162,6 +153,10 @@
   (which-key-mode))
 
 (use-package doom-modeline
+  :init
+  (setq doom-modeline-icon t)
+  :custom
+  (doom-modeline-font-family "nerd-icons")
   :config
   (doom-modeline-mode t))
 
@@ -172,10 +167,6 @@
   :custom
   (doom-themes-enable-bold t)
   (doom-themes-enable-italic t))
-
-;; Need to M-x all-the-icons-install-fonts
-(use-package all-the-icons
-  :if (display-graphic-p))
 
 ;; Need to M-x nerd-icons-install-fonts
 (use-package nerd-icons)
@@ -214,8 +205,8 @@
 (use-package eglot
   :hook
   (python-mode . eglot-ensure)
-  ;; Disable flymake ugly way
-  (eglot-managed-mode . (lambda () (flymake-mode -1))))
+  :config
+  (add-to-list 'eglot-stay-out-of 'flymake))
 
 (use-package treesit-auto
   :custom
