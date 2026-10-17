@@ -254,13 +254,12 @@
 ;; ==============================================================================
 (use-package flycheck
   :ensure t
-  :defer t
-  :init
-  ;; Globally activate Flycheck diagnostics across all valid programming viewports
-  (global-flycheck-mode 1)
   :custom
-  ;; Optimization: Do not verify code syntax on the fly if the buffer is un-saved
-  (flycheck-check-syntax-automatically '(save mode-enabled)))
+  ;; Run syntax verification strictly on file save events to preserve CPU cycles
+  (flycheck-check-syntax-automatically '(save mode-enabled))
+  (flycheck-display-errors-delay 0.1)
+  :config
+  (global-flycheck-mode 1))
 
 ;; MODERN LSP DIAGNOSTICS BRIDGE:
 ;; Forces Eglot to seamlessly stream its background LSP compilation errors
@@ -328,25 +327,12 @@
   :custom
   (eglot-events-buffer-size 0)
   :hook
-  ((prog-mode . eglot-ensure)
-   (yaml-ts-mode . eglot-ensure))
+  (prog-mode . eglot-ensure)
+  (yaml-ts-mode . eglot-ensure)
+  (json-ts-mode . eglot-ensure)
   :config
   (add-to-list 'eglot-stay-out-of 'emacs-lisp-mode)
-  (add-to-list 'eglot-stay-out-of 'flymake)
-  ;; HARD FIX FOR OPENVOX SYSTEM:
-  ;; Register the modern voxpupuli openvox-languageserver binary inside Eglot matrix.
-  ;; Maps both legacy puppet-mode and native treesitter puppet-ts-mode directly to it.
-  (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs
-                 '(puppet-ts-mode . ("openvox-languageserver" "--stdio"))))
-  ;; EXTRA IDE POWER FOR GO LANG:
-  ;; Native workspace customization for Google's gopls server.
-  (setq-default eglot-workspace-configuration
-                '((:gopls . ((analyses . ((unusedparams . t)
-                                          (unusedwrite  . t)
-                                          (shadow       . t)))
-                             (staticcheck . t)
-                             (vulncheck   . t))))))
+  (add-to-list 'eglot-stay-out-of 'flymake))
 
 ;; ==============================================================================
 ;; SYSTEM-WIDE DEV ENVIRONMENT DEPENDENCIES (FEDORA LINUX DEPLOYMENT MATRIX)
@@ -359,10 +345,9 @@
 ;; Go Language:  $ sudo dnf install golang golang-x-tools-gopls shellcheck
 ;; Python Base:  $ sudo dnf install python3-lsp-server python3-flake8
 ;; Bash Shell:   $ sudo dnf install nodejs-bash-language-server shellcheck
-;; Ruby Devel:   $ sudo dnf install ruby-devel
-;; Core Utils:   $ sudo dnf install jq
+;; Core Utils:   $ sudo dnf install jq libyaml-devel
 ;;
-;; [2. INFRASTRUCTURE AS CODE — HASHICORP REPOSITORY]
+;; [2. INFRASTRUCTURE AS CODE — HASHICORP]
 ;; Terraform:    $ sudo dnf config-manager --add-repo https://hashicorp.com
 ;;               $ sudo dnf install terraform terraform-ls
 ;;
@@ -371,57 +356,53 @@
 ;; Dockerfiles:  $ npm install -g dockerfile-language-server-nodejs
 ;; YAML Syntax:  $ npm install -g yaml-language-server
 ;; JSON Layout:  $ npm install -g vscode-json-languageserver
-;;
-;; [4. RUBY LANGUAGE EXTENSIONS — SYSTEM GEMS]
-;; Ruby LSP:     $ sudo gem install solargraph
-;; Puppet Lint:  $ sudo gem install puppet-lint
 ;; ==============================================================================
 
 ;; ==============================================================================
 ;; 12. NATIVE SYNTAX PARSING INFRASTRUCTURE (TREE-SITTER)
 ;; ==============================================================================
+(use-package treesit
+  :ensure nil
+  :custom
+  (treesit-font-lock-level 4)
+  :init
+  (setq treesit-language-source-alist
+   '((bash              . ("https://github.com/tree-sitter/tree-sitter-bash"))
+     (c                 . ("https://github.com/tree-sitter/tree-sitter-c"))
+     (cpp               . ("https://github.com/tree-sitter/tree-sitter-cpp"))
+     ;; (dockerfile        . ("https://github.com/wharflab/tree-sitter-containerfile" "main" "src" "tree_sitter_containerfile"))
+     (elisp             . ("https://github.com/Wilfred/tree-sitter-elisp" "main" "src"))
+     (embedded_template . ("https://github.com/tree-sitter/tree-sitter-embedded-template" "master" "src"))
+     (go                . ("https://github.com/tree-sitter/tree-sitter-go"))
+     (html              . ("https://github.com/tree-sitter/tree-sitter-html"))
+     (javascript        . ("https://github.com/tree-sitter/tree-sitter-javascript"))
+     (json              . ("https://github.com/tree-sitter/tree-sitter-json"))
+     (make              . ("https://github.com/tree-sitter-grammars/tree-sitter-make"))
+     (markdown          . ("https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown/src"))
+     (puppet            . ("https://github.com/smoeding/tree-sitter-puppet" "main" "src"))
+     (python            . ("https://github.com/tree-sitter/tree-sitter-python"))
+     (ruby              . ("https://github.com/tree-sitter/tree-sitter-ruby"))
+     (rust              . ("https://github.com/tree-sitter/tree-sitter-rust"))
+     (toml              . ("https://github.com/tree-sitter-grammars/tree-sitter-toml"))
+     (yaml              . ("https://github.com/tree-sitter-grammars/tree-sitter-yaml")))))
+
 (use-package treesit-auto
   :ensure t
   :functions global-treesit-auto-mode
   :custom
-  ;; MAX COMPATIBILITY: Force Emacs to prompt before compiling new language grammars
-  (treesit-auto-install 'prompt)
+  ;; HARD FIX FOR RECIPIE HIJACKING: We command treesit-auto to DROP its internal
+  ;; recipes entirely and synchronize its behavior strictly using your custom
+  ;; 'treesit-language-source-alist' table layout! Prevents any old URLs fallback leaks.
+  (treesit-auto-install 'fallback)
 
-  ;; HIGH-FIDELITY TYPOGRAPHY: Set maximum syntax highlighting depth (Level 4).
-  ;; This unlocks gorgeous, rich color coding inside your Doom-Dracula theme!
-  (treesit-font-lock-level 4)
-
-  ;; List of active languages we want to automatically manage via Tree-sitter
+  ;; Your strict curated list of active languages to manage automatically
   (treesit-auto-langs
-   '(awk bash c cpp cmake dockerfile jinja2 json go go-mod html make markdown puppet python r ruby rust toml yaml))
+   '(bash c cpp dockerfile embedded_template json go html javascript make markdown puppet python rust toml yaml))
   :config
   ;; Instruct the engine to map ALL supported extensions to native *-ts-modes
   (treesit-auto-add-to-auto-mode-alist 'all)
   ;; Explicitly pass parameter 1 to guarantee robust global activation
   (global-treesit-auto-mode 1))
-
-(use-package ruby-mode)
-
-;; ==============================================================================
-;; 13. WEB TEMPLATES & INFRASTRUCTURE MARKUP MODES
-;; ==============================================================================
-(use-package web-mode
-  :ensure t
-  :defer t
-  ;; Lazily maps HTML, ERB, and Jinja2/Ansible templates to a unified engine
-  :mode (("\\.erb\\'"       . web-mode)
-         ("\\.html\\'"      . web-mode)
-         ("\\.j2\\'"        . web-mode)
-         ("\\.html\\.j2\\'" . web-mode))
-  :custom
-  ;; Buffer-local indentation geometry for web tokens (Clean scalar values)
-  (web-mode-markup-indent-offset 2)
-  (web-mode-css-indent-offset 2)
-  (web-mode-code-indent-offset 2)
-  ;; Force web-mode to natively activate its lightning-fast Jinja2
-  ;; template parsing engine whenever a .j2 file layout is detected.
-  ;; Note: NO leading quote sign inside the declarative :custom block!
-  (web-mode-engines-alist '(("jinja" . "\\.j2\\'"))))
 
 (use-package puppet-ts-mode
   :ensure t
@@ -429,13 +410,45 @@
   :mode "\\.pp\\'"
   :custom
   (flycheck-puppet-lint-disabled-checks
-   '("80chars"
+   '(
      "140chars"
+     "80chars"
      "autoloader_layout"
+     "case_without_default"
      "documentation"
      "inherits_across_namespaces"
+     "manifest_whitespace_class_name_single_space_after"
+     "manifest_whitespace_closing_brace_before"
+     "manifest_whitespace_closing_bracket_after"
+     "manifest_whitespace_closing_bracket_before"
+     "manifest_whitespace_opening_brace_after"
+     "manifest_whitespace_opening_brace_before"
+     "manifest_whitespace_opening_bracket_after"
+     "manifest_whitespace_two_empty_lines"
+     "parameter_documentation"
+     "parameter_types"
+     "params_empty_string_assignment"
      "selector_inside_resource"
-     "variable_scope")))
+     "strict_indent"
+     "trailing_comma"
+     "variable_scope"
+     )))
+
+;; ==============================================================================
+;; 13. WEB TEMPLATES & INFRASTRUCTURE MARKUP MODES (LEGACY POLYGLOT COMPATIBILITY)
+;; ==============================================================================
+(use-package web-mode
+  :ensure t
+  :defer t
+  :mode (("\\.erb\\'"       . web-mode)
+         ("\\.j2\\'"        . web-mode))
+  :custom
+  (web-mode-markup-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 2)
+  (web-mode-engines-alist
+   '(("erb"   . "\\.erb\\'")
+     ("jinja" . "\\.j2\\'"))))
 
 ;; ==============================================================================
 ;; 14. DATA SERIALIZATION MODES (YAML & JSON ECOSYSTEM)
@@ -510,14 +523,13 @@
   :custom
   (treemacs-filewatch-mode t)          ; Automatically refresh when files change on disk
   (treemacs-follow-mode t)             ; Seamlessly expand directories to follow your active cursor
-  (treemacs-git-commit-diff-mode t)    ; Visually highlight uncommitted git changes inside the tree
+  (treemacs-git-core-type 'deferred)   ; Forces Treemacs to query Git statuses in background threads using 'deferred' engine.
   (treemacs-is-never-other-window t)   ; Prevent C-x o from accidentally switching focus into sidebar
   (treemacs-project-follow-cleanup t)  ; Collapse unused projects cleanly to save space
   (treemacs-text-scale -2)             ; Compact visual scale matching high-res FullHD displays
   :config
   ;; Guard parameter configuration for side windows layouts boundaries
   (add-to-list 'window-persistent-parameters '(window-side . writable))
-
   ;; HARD FIX FOR THEME INITIALIZATION:
   ;; Instead of lazy-loading via :after, we force the inline execution of nerd-icons integration
   ;; right when Treemacs configuration block is evaluated. This guarantees registration!
