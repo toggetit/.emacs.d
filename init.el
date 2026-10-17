@@ -209,10 +209,9 @@
   (which-key-mode))
 
 (use-package doom-modeline
-  :init
-  (setq doom-modeline-icon t)
   :custom
   (doom-modeline-font-family "nerd-icons")
+  (doom-modeline-icon t)
   :config
   (doom-modeline-mode t))
 
@@ -274,14 +273,11 @@
 (use-package kind-icon
   :ensure t
   :after corfu
-  ;; Hook kind-icon formatter into corfu's presentation layer
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
   :custom
-  ;; Explicitly force kind-icon to utilize our vector nerd-icons fonts layout
   (kind-icon-use-icons t)
-  (kind-icon-default-style
-   '(:padding (-1 . 1) :factor 0.4 :background nil :foreground nil))
+  (kind-icon-default-style '(:padding 1 :factor 0.4 :background nil :foreground nil))
   (kind-icon-mapping
    '((variable "v" :icon "cod-symbol_variable" :face font-lock-variable-name-face)
      (function "f" :icon "cod-symbol_method" :face font-lock-function-name-face)
@@ -322,8 +318,14 @@
   ((prog-mode . eglot-ensure)
    (yaml-ts-mode . eglot-ensure))
   :config
+  (add-to-list 'eglot-stay-out-of 'emacs-lisp-mode)
   (add-to-list 'eglot-stay-out-of 'flymake)
-  (setq eglot-events-buffer-size 0)) ; Disabling logging completely saves CPU cycles
+  ;; HARD FIX FOR OPENVOX SYSTEM:
+  ;; Register the modern voxpupuli openvox-languageserver binary inside Eglot matrix.
+  ;; Maps both legacy puppet-mode and native treesitter puppet-ts-mode directly to it.
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+                 '(puppet-ts-mode . ("openvox-languageserver" "--stdio")))))
 
 ;; ==============================================================================
 ;; SYSTEM-WIDE DEV ENVIRONMENT DEPENDENCIES (FEDORA LINUX DNF INFRASTRUCTURE)
@@ -363,24 +365,40 @@
 
   ;; List of active languages we want to automatically manage via Tree-sitter
   (treesit-auto-langs
-   '(awk bash c cpp cmake dockerfile json go go-mod html make markdown puppet python r ruby rust toml yaml))
+   '(awk bash c cpp cmake dockerfile jinja2 json go go-mod html make markdown puppet python r ruby rust toml yaml))
   :config
   ;; Instruct the engine to map ALL supported extensions to native *-ts-modes
   (treesit-auto-add-to-auto-mode-alist 'all)
   ;; Explicitly pass parameter 1 to guarantee robust global activation
   (global-treesit-auto-mode 1))
 
-(use-package jinja2-mode)
-
 (use-package ruby-mode)
 
+;; ==============================================================================
+;; 13. WEB TEMPLATES & INFRASTRUCTURE MARKUP MODES
+;; ==============================================================================
 (use-package web-mode
-  :config
-  (remove-hook 'before-save-hook 'delete-trailing-whitespace t)
-  :mode
-  ("\\.erb\\'" . web-mode))
+  :ensure t
+  :defer t
+  ;; Lazily maps HTML, ERB, and Jinja2/Ansible templates to a unified engine
+  :mode (("\\.erb\\'"       . web-mode)
+         ("\\.html\\'"      . web-mode)
+         ("\\.j2\\'"        . web-mode)
+         ("\\.html\\.j2\\'" . web-mode))
+  :custom
+  ;; Buffer-local indentation geometry for web tokens (Clean scalar values)
+  (web-mode-markup-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 2)
+  ;; Force web-mode to natively activate its lightning-fast Jinja2
+  ;; template parsing engine whenever a .j2 file layout is detected.
+  ;; Note: NO leading quote sign inside the declarative :custom block!
+  (web-mode-engines-alist '(("jinja" . "\\.j2\\'"))))
 
 (use-package puppet-ts-mode
+  :ensure t
+  :defer t
+  :mode "\\.pp\\'"
   :custom
   (flycheck-puppet-lint-disabled-checks
    '("80chars"
@@ -426,11 +444,13 @@
     (add-to-list 'eglot-server-programs
                  '(terraform-mode . ("terraform-ls" "serve")))))
 
-(use-package dockerfile-mode)
-
-(use-package docker-compose-mode
-  :mode
-  ("compose[^/]*\\.ya?ml$" . docker-compose-mode))
+;; ==============================================================================
+;; 14. CONTAINERIZATION ENVIRONMENT (DOCKER INFRASRUCTURE)
+;; ==============================================================================
+(use-package dockerfile-ts-mode
+  :ensure nil ; Built-in core mode, do not download anything
+  :defer t
+  :mode "Dockerfile\\'")
 
 (use-package beacon
   :config
