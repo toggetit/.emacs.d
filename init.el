@@ -5,7 +5,6 @@
 ;; https://github.com/toggetit/.emacs.d
 
 ;;; Code:
-;;; init.el --- private config file -*- lexical-binding: t -*-
 
 ;; ==============================================================================
 ;; 1. CORE SYSTEM PERFORMANCES & ENVIRONMENT TUNING
