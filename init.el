@@ -134,21 +134,27 @@
   :init
   (savehist-mode))
 
+;; ==============================================================================
+;; 6. PROJECT & VERSION CONTROL INFRASTRUCTURE (MAGIT, FORGE & PROJECTILE)
+;; ==============================================================================
 (use-package magit
+  :ensure t
   :custom
-  (magit-completing-read-function 'helm--completing-read-default)
-  (magit-log-section-commit-count 15))
+  (magit-log-section-commit-count 15)
+  :bind
+  ("C-x g" . magit-status))
 
 (use-package forge
-  :after magit)
+  :ensure t
+  :after magit
+  :custom
+  (forge-database-file (expand-file-name "forge-database.db" user-emacs-directory)))
 
 (use-package projectile
+  :ensure t
   :custom
   (projectile-enable-caching t)
-  (projectile-project-search-path
-   '(("~/.emacs.d" . 0) ("~/git" . 1)))
-  ;; Old search method
-  ;; (projectile-completion-system 'ido)
+  (projectile-project-search-path '(("~/.emacs.d" . 0) ("~/git" . 1)))
   :config
   (projectile-mode)
   :bind-keymap
@@ -160,37 +166,48 @@
 
 (use-package yasnippet-snippets)
 
+;; ==============================================================================
+;; 7. HELM INTERACTION FRAMEWORK & VISUAL FILTERS
+;; ==============================================================================
 (use-package helm
+  :ensure t
   :bind
   ([remap execute-extended-command] . helm-M-x)
-  ([remap find-file] . helm-find-files)
-  ([remap isearch-backward] . previous-complete-history-element)
-  ([remap switch-to-buffer] . helm-mini)
-  ([remap yank-pop] . helm-show-kill-ring)
-  ([remap isearch-forward] . helm-occur)
+  ([remap find-file]                . helm-find-files)
+  ([remap switch-to-buffer]         . helm-mini)
+  ([remap yank-pop]                 . helm-show-kill-ring)
+  ([remap isearch-forward]          . helm-occur)
   (:map helm-map
         ("TAB" . helm-execute-persistent-action))
+  :custom
+  ;; Split Helm viewport inside the current active window layout safely
+  (helm-split-window-inside-p t)
+  ;; CORE NATIVE REVIAL: Tell native Helm toolbars to parse nerd-icons fonts layout!
+  (helm-x-icons-provider 'nerd-icons)
+  (helm-buffers-show-icons t)
+  ;; HIGH-SPEED FUZZY INTERACTION: Enable modern smart fuzzy matching engine
+  (helm-M-x-fuzzy-match t)
+  (helm-buffers-fuzzy-match t)
+  (helm-recentf-fuzzy-match t)
+  (helm-find-files-fuzzy-match t)
   :config
+  ;; Eagerly activate global interceptor mode across the core framework
   (helm-mode 1)
-  :custom
-  (helm-split-window-inside-p t))
+  ;; Safely trigger the native file-matching icon layer layout sequence
+  (with-eval-after-load 'helm-files
+    (helm-ff-icon-mode 1)))
 
+;; CORRECT MODERN HELM-PROJECTILE INTEGRATION Layout
 (use-package helm-projectile
-  :config
-  (helm-projectile-on))
-
-(use-package helm-gtags
+  :ensure t
+  :after (helm projectile)
+  :hook (projectile-mode . helm-projectile-mode)
   :custom
-  (helm-gtags-ignore-case t)
-  (helm-gtags-auto-update t)
-  (helm-gtags-use-input-at-cursor t)
-  (helm-gtags-pulse-at-cursor t)
-  ;; (helm-gtags-prefix-key "\C-cg")
-  (helm-gtags-suggested-key-mapping t)
-  :hook
-  (c++-mode))
+  (helm-projectile-fuzzy-match t))
 
 (use-package helm-c-yasnippet
+  :ensure t
+  :after (helm yasnippet)
   :custom
   (helm-yas-space-match-any-greedy t)
   :bind
