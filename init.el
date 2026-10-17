@@ -142,8 +142,6 @@
 (use-package forge
   :after magit)
 
-(use-package gitlab-ci-mode)
-
 (use-package projectile
   :custom
   (projectile-enable-caching t)
@@ -234,14 +232,25 @@
   :custom
   (markdown-command "multimarkdown"))
 
-;; Flycheck part
+;; ==============================================================================
+;; 9. CODE DIAGNOSTICS FRONTIER (FLYCHECK)
+;; ==============================================================================
 (use-package flycheck
-  :hook prog-mode)
+  :ensure t
+  :hook (prog-mode . global-flycheck-mode))
 
 (use-package flycheck-yamllint
-  :hook
-  (flycheck-mode . flycheck-yamllint-setup))
-;; End flycheck part
+  :ensure t
+  :after flycheck
+  :hook (flycheck-mode . flycheck-yamllint-setup))
+
+;; MODERN LSP DIAGNOSTICS BRIDGE:
+;; Forces Eglot to seamlessly stream its background LSP compilation errors
+;; straight into our beautiful Flycheck frontend window layout.
+(use-package flycheck-eglot
+  :ensure t
+  :after (flycheck eglot)
+  :hook (global-flycheck-mode . global-flycheck-eglot-mode))
 
 ;; ==============================================================================
 ;; 10. MODERN TEXT COMPLETION ENGINE (CORFU SYSTEM)
@@ -270,27 +279,13 @@
   ;; Global micro-mode setup for internal frame buffers
   (global-corfu-mode 1))
 
-(use-package kind-icon
+;; HIGH-SPEED VECTOR ICONS FOR CORFU POPUPS
+(use-package nerd-icons-corfu
   :ensure t
   :after corfu
   :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
-  :custom
-  (kind-icon-use-icons t)
-  (kind-icon-default-style '(:padding 1 :factor 0.4 :background nil :foreground nil))
-  (kind-icon-mapping
-   '((variable "v" :icon "cod-symbol_variable" :face font-lock-variable-name-face)
-     (function "f" :icon "cod-symbol_method" :face font-lock-function-name-face)
-     (keyword "k" :icon "cod-symbol_keyword" :face font-lock-keyword-face)
-     (class "c" :icon "cod-symbol_class" :face font-lock-type-face)
-     (interface "i" :icon "cod-symbol_interface" :face font-lock-type-face)
-     (module "m" :icon "cod-file_submodule" :face font-lock-preprocessor-face)
-     (constant "c" :icon "cod-symbol_constant" :face font-lock-constant-face)
-     (field "f" :icon "cod-symbol_field" :face font-lock-variable-name-face)
-     (snippet "S" :icon "cod-symbol_snippet" :face font-lock-string-face)
-     (folder "d" :icon "cod-folder" :face dired-directory)
-     (file "f" :icon "cod-file" :face default)
-     (text "t" :icon "cod-text_slot" :face font-lock-doc-face))))
+  ;; Dynamically inject the clean vector font formatter into Corfu layout
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 ;; ==============================================================================
 ;; 10a. COMPLETION AT POINT EXTENSIONS (CAPE SYSTEM)
@@ -452,19 +447,26 @@
   :defer t
   :mode "Dockerfile\\'")
 
+;; ==============================================================================
+;; 17. VISUAL ERGONOMICS & DEEP HISTORIES
+;; ==============================================================================
 (use-package beacon
-  :config
-  (beacon-mode t))
+  :ensure t
+  :defer t
+  ;; Lazily hooks the visual cursor pulse whenever switching active buffers
+  :hook (window-configuration-change . beacon-mode))
 
 (use-package undo-tree
-  :config
-  (global-undo-tree-mode t)
+  :ensure t
+  :defer t
+  ;; Instantly activates the global visual history matrix upon text modification
+  :init
+  (global-undo-tree-mode 1)
   :custom
   (undo-tree-visualizer-diff t)
-  (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-  (undo-tree-visualizer-timestamps t))
-
-(use-package etc-sudoers-mode)
+  (undo-tree-visualizer-timestamps t)
+  ;; Safe isolation directory layout for absolute state persistence
+  (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
 
 (use-package treemacs
   :ensure t
