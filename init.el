@@ -233,16 +233,17 @@
   (markdown-command "multimarkdown"))
 
 ;; ==============================================================================
-;; 9. CODE DIAGNOSTICS FRONTIER (FLYCHECK)
+;; 9. CODE DIAGNOSTICS FRONTIER (FLYCHECK SYSTEM)
 ;; ==============================================================================
 (use-package flycheck
   :ensure t
-  :hook (prog-mode . global-flycheck-mode))
-
-(use-package flycheck-yamllint
-  :ensure t
-  :after flycheck
-  :hook (flycheck-mode . flycheck-yamllint-setup))
+  :defer t
+  :init
+  ;; Globally activate Flycheck diagnostics across all valid programming viewports
+  (global-flycheck-mode 1)
+  :custom
+  ;; Optimization: Do not verify code syntax on the fly if the buffer is un-saved
+  (flycheck-check-syntax-automatically '(save mode-enabled)))
 
 ;; MODERN LSP DIAGNOSTICS BRIDGE:
 ;; Forces Eglot to seamlessly stream its background LSP compilation errors
@@ -320,28 +321,43 @@
   ;; Maps both legacy puppet-mode and native treesitter puppet-ts-mode directly to it.
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs
-                 '(puppet-ts-mode . ("openvox-languageserver" "--stdio")))))
+                 '(puppet-ts-mode . ("openvox-languageserver" "--stdio"))))
+  ;; EXTRA IDE POWER FOR GO LANG:
+  ;; Native workspace customization for Google's gopls server.
+  (setq-default eglot-workspace-configuration
+                '((:gopls . ((analyses . ((unusedparams . t)
+                                          (unusedwrite  . t)
+                                          (shadow       . t)))
+                             (staticcheck . t)
+                             (vulncheck   . t))))))
 
 ;; ==============================================================================
-;; SYSTEM-WIDE DEV ENVIRONMENT DEPENDENCIES (FEDORA LINUX DNF INFRASTRUCTURE)
+;; SYSTEM-WIDE DEV ENVIRONMENT DEPENDENCIES (FEDORA LINUX DEPLOYMENT MATRIX)
 ;; ==============================================================================
 ;; To unleash the full power of Eglot (LSP) and Flycheck (Diagnostics) inside
-;; this configuration, install the respective native system binaries via DNF.
+;; this configuration, install the respective native system binaries.
 ;;
-;; [CORE LANGUAGES & COMPILERS]
+;; [1. NATIVE FEDORA PACKAGES — DNF MANAGER]
 ;; C / C++:      $ sudo dnf install gcc-c++ clang-tools-extra
-;; Go Language:  $ sudo dnf install golang golang-x-tools-gopls golangci-lint
-;; Python:       $ sudo dnf install python3-lsp-server python3-flake8
+;; Go Language:  $ sudo dnf install golang golang-x-tools-gopls shellcheck
+;; Python Base:  $ sudo dnf install python3-lsp-server python3-flake8
 ;; Bash Shell:   $ sudo dnf install nodejs-bash-language-server shellcheck
-;; Ruby:         $ sudo dnf install ruby-devel (Note: solargraph requires 'gem install solargraph')
+;; Ruby Devel:   $ sudo dnf install ruby-devel
+;; Core Utils:   $ sudo dnf install jq
 ;;
-;; [INFRASTRUCTURE AS CODE & CONFIGURATIONS]
+;; [2. INFRASTRUCTURE AS CODE — HASHICORP REPOSITORY]
 ;; Terraform:    $ sudo dnf config-manager --add-repo https://hashicorp.com
 ;;               $ sudo dnf install terraform terraform-ls
-;; Dockerfiles:  $ sudo dnf install nodejs && sudo npm install -g dockerfile-language-server-nodejs
-;; YAML Syntax:  $ sudo dnf install yamllint && sudo npm install -g yaml-language-server
-;; JSON Layout:  $ sudo dnf install nodejs && sudo npm install -g vscode-json-languageserver
-;; Markdown:     $ sudo dnf install python3-markdown python3-mdformat
+;;
+;; [3. NODE.JS CORE ECOSYSTEM — NPM GLOBAL RUNTIME]
+;; Note: Install under regular user with local prefix (~/.npm-global/bin/)
+;; Dockerfiles:  $ npm install -g dockerfile-language-server-nodejs
+;; YAML Syntax:  $ npm install -g yaml-language-server
+;; JSON Layout:  $ npm install -g vscode-json-languageserver
+;;
+;; [4. RUBY LANGUAGE EXTENSIONS — SYSTEM GEMS]
+;; Ruby LSP:     $ sudo gem install solargraph
+;; Puppet Lint:  $ sudo gem install puppet-lint
 ;; ==============================================================================
 
 ;; ==============================================================================
@@ -468,46 +484,43 @@
   ;; Safe isolation directory layout for absolute state persistence
   (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
 
+;; ==============================================================================
+;; 15. ADVANCED SIDEBAR ARCHITECTURE (TREEMACS CORE SYSTEM)
+;; ==============================================================================
 (use-package treemacs
   :ensure t
   :defer t
   :custom
-  ;; (treemacs-width 27)
-  (treemacs-filewatch-mode t)
-  (treemacs-follow-mode t)
-  (treemacs-fringe-indicator-mode 'always)
-  (treemacs-git-commit-diff-mode t)
-  (treemacs-is-never-other-window t)
-  (treemacs-project-follow-cleanup t)
-  (treemacs-text-scale -2)
-  ;; (treemacs-resize-icons 44)
+  (treemacs-filewatch-mode t)          ; Automatically refresh when files change on disk
+  (treemacs-follow-mode t)             ; Seamlessly expand directories to follow your active cursor
+  (treemacs-git-commit-diff-mode t)    ; Visually highlight uncommitted git changes inside the tree
+  (treemacs-is-never-other-window t)   ; Prevent C-x o from accidentally switching focus into sidebar
+  (treemacs-project-follow-cleanup t)  ; Collapse unused projects cleanly to save space
+  (treemacs-text-scale -2)             ; Compact visual scale matching high-res FullHD displays
   :config
-  (add-to-list 'window-persistent-parameters
-               '(window-side . writable))
+  ;; Guard parameter configuration for side windows layouts boundaries
+  (add-to-list 'window-persistent-parameters '(window-side . writable))
+
+  ;; HARD FIX FOR THEME INITIALIZATION:
+  ;; Instead of lazy-loading via :after, we force the inline execution of nerd-icons integration
+  ;; right when Treemacs configuration block is evaluated. This guarantees registration!
+  (use-package treemacs-nerd-icons
+    :ensure t
+    :config
+    (treemacs-load-theme "nerd-icons"))
   :bind-keymap
   ("C-c t p" . treemacs-project-map)
   ("C-c t w" . treemacs-workspace-map))
 
 (use-package treemacs-projectile
-  :after (treemacs projectile)
-  :ensure t)
-
-;; (use-package treemacs-icons-dired
-;;   :hook (dired-mode . treemacs-icons-dired-enable-once)
-;;   :ensure t)
+  :ensure t
+  :defer t
+  :after (treemacs projectile))
 
 (use-package treemacs-magit
- :after (treemacs magit)
- :ensure t)
-
-(use-package treemacs-nerd-icons
-  :after (treemacs nerd-icons)
-  :ensure t)
-
-;; (treemacs-start-on-boot)
-(use-package flycheck-golangci-lint
   :ensure t
-  :hook (go-mode . flycheck-golangci-lint-setup))
+  :defer t
+  :after (treemacs magit))
 
 (provide 'init)
 ;;; init.el ends here
