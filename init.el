@@ -295,6 +295,13 @@
   ;; Global micro-mode setup for internal frame buffers
   (global-corfu-mode 1))
 
+(use-package corfu-popupinfo
+  :ensure nil
+  :after corfu
+  :hook (corfu-mode . corfu-popupinfo-mode)
+  :custom
+  (corfu-popupinfo-delay 0.2))
+
 ;; HIGH-SPEED VECTOR ICONS FOR CORFU POPUPS
 (use-package nerd-icons-corfu
   :ensure t
@@ -369,12 +376,35 @@
 ;; Step B: Compile dependencies and build native local vendored gems:
 ;;   $ bundle install
 ;;   $ bundle exec rake gem_revendor
-;;
-;; Step C: Deploy high-performance Systemd User Service unit:
+;; Step C: Relaxed puppet-lint settings
+;; cat << 'EOF' > ~/.puppet-lint.rc
+;; --no-140chars-check
+;; --no-80chars-check
+;; --no-autoloader_layout-check
+;; --no-case_without_default-check
+;; --no-documentation-check
+;; --no-inherits_across_namespaces-check
+;; --no-manifest_whitespace_class_name_single_space_after-check
+;; --no-manifest_whitespace_closing_brace_before-check
+;; --no-manifest_whitespace_closing_bracket_after-check
+;; --no-manifest_whitespace_closing_bracket_before-check
+;; --no-manifest_whitespace_opening_brace_after-check
+;; --no-manifest_whitespace_opening_brace_before-check
+;; --no-manifest_whitespace_opening_bracket_after-check
+;; --no-manifest_whitespace_two_empty_lines-check
+;; --no-parameter_documentation-check
+;; --no-parameter_types-check
+;; --no-params_empty_string_assignment-check
+;; --no-selector_inside_resource-check
+;; --no-strict_indent-check
+;; --no-trailing_comma-check
+;; --no-variable_scope-check
+;; EOF
+;; Step D: Deploy high-performance Systemd User Service unit:
 ;;   $ mkdir -p ~/.config/systemd/user/
 ;;   $ cat << 'EOF' > ~/.config/systemd/user/puppet-lsp.service
 ;; [Unit]
-;; Description=OpenVox Puppet Language Server v3 Matrix
+;; Description=OpenVox Puppet Language Server
 ;; After=network.target
 ;; Documentation=https://github.com/voxpupuli/openvox-editor-services
 ;;
