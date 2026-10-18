@@ -326,12 +326,15 @@
   :custom
   (eglot-events-buffer-size 0)
   :hook
-  (prog-mode . eglot-ensure)
-  (yaml-ts-mode . eglot-ensure)
-  (json-ts-mode . eglot-ensure)
+  ;; HARD FIX: Cleanly combined all entry points into a single flat list structure! [1.3]
+  ((prog-mode    . eglot-ensure)
+   (yaml-ts-mode . eglot-ensure)
+   (json-ts-mode . eglot-ensure))
   :config
   (add-to-list 'eglot-stay-out-of 'emacs-lisp-mode)
-  (add-to-list 'eglot-stay-out-of 'flymake))
+  (add-to-list 'eglot-stay-out-of 'flymake)
+  (add-to-list 'eglot-server-programs
+               '((puppet-mode puppet-ts-mode) . ("localhost" 15000))))
 
 ;; ==============================================================================
 ;; SYSTEM-WIDE DEV ENVIRONMENT DEPENDENCIES (FEDORA LINUX DEPLOYMENT MATRIX)
@@ -355,6 +358,47 @@
 ;; Dockerfiles:  $ npm install -g dockerfile-language-server-nodejs
 ;; YAML Syntax:  $ npm install -g yaml-language-server
 ;; JSON Layout:  $ npm install -g vscode-json-languageserver
+
+;; [4. VOXPUPULI PUPPET LANGUAGE SERVER v3]
+;; Step A: Create dedicated storage directory and clone upstream repo:
+;;   $ mkdir -p ~/.local/share/voxpupuli
+;;   $ cd ~/.local/share/voxpupuli
+;;   $ git clone https://github.com/voxpupuli/openvox-editor-services.git
+;;   $ cd openvox-editor-services
+;;
+;; Step B: Compile dependencies and build native local vendored gems:
+;;   $ bundle install
+;;   $ bundle exec rake gem_revendor
+;;
+;; Step C: Deploy high-performance Systemd User Service unit:
+;;   $ mkdir -p ~/.config/systemd/user/
+;;   $ cat << 'EOF' > ~/.config/systemd/user/puppet-lsp.service
+;; [Unit]
+;; Description=OpenVox Puppet Language Server v3 Matrix
+;; After=network.target
+;; Documentation=https://github.com/voxpupuli/openvox-editor-services
+;;
+;; [Service]
+;; Type=simple
+;; WorkingDirectory=%h/.local/share/voxpupuli/openvox-editor-services
+;; ExecStart=/usr/bin/bundle exec ruby ./puppet-languageserver --port=15000 --ip=127.0.0.1 --timeout=0 --no-stop
+;;
+;; # High-Fidelity Performance Tuning for Desktop Responsiveness:
+;; Nice=-5
+;; IOSchedulingClass=best-effort
+;; IOSchedulingPriority=3
+;;
+;; Restart=always
+;; RestartSec=2s
+;;
+;; [Install]
+;; WantedBy=default.target
+;; EOF
+;;
+;; Step D: Enable and fire up the background daemon:
+;;   $ systemctl --user daemon-reload
+;;   $ systemctl --user enable --now puppet-lsp.service
+;;   $ systemctl --user status puppet-lsp.service
 ;; ==============================================================================
 
 ;; ==============================================================================
@@ -406,32 +450,32 @@
 (use-package puppet-ts-mode
   :ensure t
   :defer t
-  :mode "\\.pp\\'"
-  :custom
-  (flycheck-puppet-lint-disabled-checks
-   '(
-     "140chars"
-     "80chars"
-     "autoloader_layout"
-     "case_without_default"
-     "documentation"
-     "inherits_across_namespaces"
-     "manifest_whitespace_class_name_single_space_after"
-     "manifest_whitespace_closing_brace_before"
-     "manifest_whitespace_closing_bracket_after"
-     "manifest_whitespace_closing_bracket_before"
-     "manifest_whitespace_opening_brace_after"
-     "manifest_whitespace_opening_brace_before"
-     "manifest_whitespace_opening_bracket_after"
-     "manifest_whitespace_two_empty_lines"
-     "parameter_documentation"
-     "parameter_types"
-     "params_empty_string_assignment"
-     "selector_inside_resource"
-     "strict_indent"
-     "trailing_comma"
-     "variable_scope"
-     )))
+  :mode "\\.pp\\'")
+  ;; :custom
+  ;; (flycheck-puppet-lint-disabled-checks
+  ;;  '(
+  ;;    "140chars"
+  ;;    "80chars"
+  ;;    "autoloader_layout"
+  ;;    "case_without_default"
+  ;;    "documentation"
+  ;;    "inherits_across_namespaces"
+  ;;    "manifest_whitespace_class_name_single_space_after"
+  ;;    "manifest_whitespace_closing_brace_before"
+  ;;    "manifest_whitespace_closing_bracket_after"
+  ;;    "manifest_whitespace_closing_bracket_before"
+  ;;    "manifest_whitespace_opening_brace_after"
+  ;;    "manifest_whitespace_opening_brace_before"
+  ;;    "manifest_whitespace_opening_bracket_after"
+  ;;    "manifest_whitespace_two_empty_lines"
+  ;;    "parameter_documentation"
+  ;;    "parameter_types"
+  ;;    "params_empty_string_assignment"
+  ;;    "selector_inside_resource"
+  ;;    "strict_indent"
+  ;;    "trailing_comma"
+  ;;    "variable_scope"
+  ;;    )))
 
 ;; ==============================================================================
 ;; 13. WEB TEMPLATES & INFRASTRUCTURE MARKUP MODES (LEGACY POLYGLOT COMPATIBILITY)
